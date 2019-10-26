@@ -1,0 +1,66 @@
+﻿<Controls:MetroWindow x:Class="GeneralsUltimateExperience.Settings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:local="clr-namespace:GeneralsUltimateExperience"
+        mc:Ignorable="d"
+        Title="Paramètres" Width="534" Height="386" Icon="icon.ico" ResizeMode="NoResize" ShowInTaskbar="False" TitleForeground="#cccccc" ContentRendered="MetroWindow_ContentRendered" WindowStartupLocation="CenterOwner">
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="/GeneralsUltimateExperience;component/Images/Background.png" TileMode="None" Stretch="UniformToFill" />
+        </Grid.Background>
+        <GroupBox x:Name="groupBoxResolution" Header="Resolution" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="165" Width="213"/>
+        <Label x:Name="labelGenerals" Content="Generals" HorizontalAlignment="Left" Margin="20,41,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Verdana" FontSize="13" />
+        <ComboBox x:Name="comboBoxGenerals" HorizontalAlignment="Left" Margin="24,67,0,0" VerticalAlignment="Top" Width="189" />
+        <Label x:Name="labelHeureH" Content="Heure H" HorizontalAlignment="Left" Margin="20,104,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Verdana" FontSize="13"/>
+        <ComboBox x:Name="comboBoxHeureH" HorizontalAlignment="Left" Margin="24,130,0,0" VerticalAlignment="Top" Width="189" />
+        <GroupBox x:Name="groupBoxZoom" Header="Zoom libre" HorizontalAlignment="Left" Margin="277,10,0,0" VerticalAlignment="Top" Height="165" Width="213"/>
+        <Label x:Name="labelCameraHeight" Content="Hauteur caméra (1000)" HorizontalAlignment="Left" Margin="287,41,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Verdana" FontSize="13">
+            <Label.ToolTip>
+                <TextBlock>Valeur par défaut : 1000</TextBlock>
+            </Label.ToolTip>
+        </Label>
+        <Slider x:Name="sliderCameraHeight" HorizontalAlignment="Left" Margin="292,67,0,0" VerticalAlignment="Top" Width="194" Minimum="300" Maximum="5000" TickFrequency="50" IsSnapToTickEnabled="True"/>
+        <Label x:Name="labelCameraSpeed" Content="Vitesse du zoom (100%)" HorizontalAlignment="Left" Margin="287,104,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Verdana" FontSize="13">
+            <Label.ToolTip>
+                <TextBlock>Valeur par défaut : 60%</TextBlock>
+            </Label.ToolTip>
+        </Label>
+        <Slider x:Name="sliderCameraSpeed" HorizontalAlignment="Left" Margin="292,130,0,0" VerticalAlignment="Top" Width="194" Maximum="100" TickFrequency="5" IsSnapToTickEnabled="True"/>
+        <GroupBox x:Name="groupBoxFullscreen" Header="Fullscreen mode" HorizontalAlignment="Left" Margin="10,173,0,0" VerticalAlignment="Top" Height="104" Width="213"/>
+        <RadioButton x:Name="radioButtonFullscreenModeOriginal" Content="Original" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" FontFamily="Verdana" FontSize="13" Margin="24,210,0,0">
+            <RadioButton.ToolTip>
+                <TextBlock>Fullscreen original = géré par le jeu</TextBlock>
+            </RadioButton.ToolTip>
+        </RadioButton>
+        <RadioButton x:Name="radioButtonFullscreenModeGregware" Content="Gregware" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" FontFamily="Verdana" FontSize="13" Margin="24,231,0,0" RenderTransformOrigin="0.512,2.067">
+            <RadioButton.ToolTip>
+                <TextBlock>Fullscreen modifié :
+                    <LineBreak /> - résoud les problèmes de stabilité avec alt+tab
+                    <LineBreak /> - apporte la compatibilité multi-écrans
+                    <LineBreak /> - peut diminuer les performances sur les petites config
+                </TextBlock>
+            </RadioButton.ToolTip>
+        </RadioButton>
+        <GroupBox x:Name="groupBoxMisc" Header="Défilement" HorizontalAlignment="Left" Margin="277,173,0,0" VerticalAlignment="Top" Height="70" Width="213"/>
+        <CheckBox x:Name="checkBoxMiscScrollWasd" HorizontalAlignment="Left" Margin="292,265,0,0" VerticalAlignment="Top"
+               FontFamily="Verdana" FontSize="11" x:FieldModifier="public" >
+            <TextBlock Text="Activer scroll clavier" Margin="0,0,0,0" Foreground="White" FontFamily="Verdana" FontSize="13" />
+            <CheckBox.ToolTip>
+                <TextBlock>Permet de scroller la map avec les touches du clavier (W, A, S, D)
+                    <LineBreak /> - désactive les fonctions originales de ces touches dans le jeu
+                </TextBlock>
+            </CheckBox.ToolTip>
+        </CheckBox>
+        <Label x:Name="labelScrollFactor" Content="Vitesse du scroll (20%)" HorizontalAlignment="Left" Margin="287,204,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Verdana" FontSize="13">
+            <Label.ToolTip>
+                <TextBlock>Valeur par défaut : 20%</TextBlock>
+            </Label.ToolTip>
+        </Label>
+        <Slider x:Name="sliderScrollFactor" HorizontalAlignment="Left" Margin="292,231,0,0" VerticalAlignment="Top" Width="194" Minimum="10" Maximum="145" TickFrequency="1" IsSnapToTickEnabled="True"/>
+        <Button x:Name="buttonOK" Content="OK" Margin="0,0,126,10" Width="99" Height="37" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Verdana" FontSize="14" Click="buttonOK_Click"/>
+        <Button x:Name="buttonCancel" Content="Annuler" Margin="0,0,10,10" Width="99" Height="37" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Verdana" FontSize="14" Click="buttonCancel_Click" />
+    </Grid>
+</Controls:MetroWindow>
