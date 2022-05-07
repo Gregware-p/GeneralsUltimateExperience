@@ -175,7 +175,9 @@ namespace Installer
                 freeSpace = new DriveInfo(new FileInfo(tempFolderPath).Directory.Root.FullName).AvailableFreeSpace;
                 if (freeSpace < TOTAL_SIZE_COMPRESSE + SIZE_MARGE)
                 {
-                    MessageBox.Show(string.Format("Le lecteur {0} n'a pas suffisamment d'espace disponible. L'installation a besoin d'espace sur ce disque pour les exctractions temporaires. Ces données sont supprimées à la fin de l'installation. Un minimum de {1} Go est requis.", (TOTAL_SIZE_COMPRESSE + SIZE_MARGE) >> 30),
+                    MessageBox.Show(string.Format("Le lecteur {0} n'a pas suffisamment d'espace disponible. L'installation a besoin d'espace sur ce disque pour les exctractions temporaires. Ces données sont supprimées à la fin de l'installation. Un minimum de {1} Go est requis.",
+                        Path.GetFileName(new FileInfo(tempFolderPath).FullName),
+                        (TOTAL_SIZE_COMPRESSE + SIZE_MARGE) >> 30),
                         "Dossier d'installation invalide", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     SetActivationDesControles(true);
                     textBoxInstallpath.Focus();
@@ -615,7 +617,7 @@ namespace Installer
             sw.WriteLine("UseDoubleClickAttackMove = no");
             sw.WriteLine("UseLightMap = yes");
             sw.WriteLine("UseShadowDecals = yes");
-            sw.WriteLine("UseShadowVolumes = yes");
+            sw.WriteLine("UseShadowVolumes = no");
             sw.WriteLine("VoiceVolume = 60");
             sw.Close();
         }
