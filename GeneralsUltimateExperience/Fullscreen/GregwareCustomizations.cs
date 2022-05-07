@@ -137,14 +137,17 @@ namespace GeneralsUltimateExperience.Fullscreen
         #endregion
 
         #region Methods
-        public void Activer()
+        public void Activer(int gameProcessId)
         {
             // Initialisation
             _enabled = true;
 
             // Trouver le process
-            Process process = Process.GetProcessesByName("game.dat").FirstOrDefault();
-            if (process == null) throw new Exception("Problème d'exécution du jeu, si cette erreur persiste essayer de désactiver les options Gregware (fullscreen et scroll)");
+            //Process process = Process.GetProcessesByName("game.dat").FirstOrDefault();
+            //if (process == null) throw new Exception("Problème d'exécution du jeu, si cette erreur persiste essayer de désactiver les options Gregware (fullscreen et scroll)");
+
+            Process process = Process.GetProcesses().First(p => p.Id == gameProcessId);
+            if (process == null || process == default(Process)) throw new Exception("Problème d'exécution du jeu, si cette erreur persiste essayer de désactiver les options Gregware (fullscreen et scroll)");
 
             if (_isFullscreenGregware)
             {
