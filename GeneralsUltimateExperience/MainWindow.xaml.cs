@@ -27,7 +27,7 @@ namespace GeneralsUltimateExperience
         public const string UPDATE_SERVICE_URL = "http://gregware.internet-box.ch/GeneralsUltimateExperience";
         public const double CHANGE_TAB_ANIMATION_DURATION_IN_SECONDS = 0.1;
         public const double CHANGE_MOD_ANIMATION_DURATION_IN_SECONDS = 0.25;
-        public const double MOD_BUTTON_FADE_DURATION_IN_SECONDS = 0.1;
+        public const double BUTTON_FADE_DURATION_IN_SECONDS = 0.1;
         public const double MOD_BUTTON_ACTIVATE_DURATION_IN_SECONDS = 0.5;
         public const double MOD_BUTTON_BLACK_RECTANGLE_OPACTIY = 0.6;
         public const double INITIAL_MOUSEMOVE_FADIN_DURATION_IN_SECONDS = 1;
@@ -66,6 +66,7 @@ namespace GeneralsUltimateExperience
         private TabStateEnum _tabState = TabStateEnum.First;
         private bool _imageDeFond1 = true;
         private GregwareCustomizations _fullScreenGregware = null;
+        private static int _gameProcessId = -1;
         public bool IsStarted = false;
         #endregion
 
@@ -241,6 +242,10 @@ namespace GeneralsUltimateExperience
                     string.Format("{0}\\Repair\\HeureH\\game.dat", _pathToExe),
                     string.Format("{0}\\Games\\HeureH\\game.dat", _pathToExe),
                     true);
+
+                Properties.Settings.Default["Current4g"] = false;
+                Properties.Settings.Default.Save();
+
                 CustomMessageBox.Show(this, "Game.dat nettoyés avec succès :-)", "Nettoyage game.dat", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch(Exception)
@@ -257,7 +262,7 @@ namespace GeneralsUltimateExperience
 
             if (IsGameRunning())
             {
-                CustomMessageBox.Show(this, string.Format("Nettoyage des maps impossible : le jeu est en cours d'exécution.{0}{0}Quitte d'abord le jeu (si nécessaire via Gestionnaire des tâches => fin de tâche sur game.dat)",
+                CustomMessageBox.Show(this, string.Format("Nettoyage des maps impossible : le jeu est en cours d'exécution.{0}{0}Quitte d'abord le jeu (si nécessaire via Gestionnaire des tâches => fin de tâche sur generals.exe et/ou game.dat)",
                         Environment.NewLine), "Nettoyage des maps", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -298,6 +303,7 @@ namespace GeneralsUltimateExperience
 
         private void settingsResolution_Click(object sender, RoutedEventArgs e)
         {
+            ModFactory.AllGamesBackToOriginal();
             new Settings(_pathToOptionIniGenerals, _pathToOptionIniHeureH) { Owner = this }.ShowDialog();
         }
 
@@ -317,7 +323,7 @@ namespace GeneralsUltimateExperience
 
         private void settingsAbout_Click(object sender, RoutedEventArgs e)
         {
-            CustomMessageBox.Show(this, string.Format("Version {1}.{2}{0}{0}Copyright © 2016-2018 Gregware",
+            CustomMessageBox.Show(this, string.Format("Version {1}.{2}{0}{0}Copyright © 2016-2022 Gregware",
                         Environment.NewLine, _localVersion.Major, _localVersion.Minor), "À propos", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
@@ -335,6 +341,7 @@ namespace GeneralsUltimateExperience
                 // Execute game
                 string gameExePath = ModFactory.GetGameExecutable(_currentGameName);
                 Process gameProcess = Process.Start(gameExePath);
+                _gameProcessId = gameProcess.Id;
             });
         }
 
@@ -381,6 +388,12 @@ namespace GeneralsUltimateExperience
                 // Afficher et lancer l'animation
                 ModFactory.Refresh(_currentGameName, true);
                 ModFactory.ChangeTabAnimation(_currentGameName, 1);
+
+                // Adapter le bouton launch
+                bool isActivated = (bool)Properties.Settings.Default[string.Format("CurrentLaunchActivated{0}", _currentGameName)];
+                ModFactory.ButtonAnimation(buttonLaunchGame, isActivated ? 1 : 0, CHANGE_TAB_ANIMATION_DURATION_IN_SECONDS);
+                buttonLaunchGame.IsEnabled = isActivated;
+
             }, _uiScheduler);
         }
 
@@ -418,6 +431,11 @@ namespace GeneralsUltimateExperience
             TabItems.Add(tabItemHeureH);
 
             TabItemsCollectionView = new ListCollectionView(TabItems);
+            buttonLaunchGame.Effect = new GrayscaleEffect.GrayscaleEffect();
+            buttonLaunchGame.IsEnabledChanged += ButtonLaunchGame_IsEnabledChanged;
+            bool isActivated = (bool)Properties.Settings.Default["CurrentLaunchActivatedHeureH"];
+            ModFactory.ButtonAnimation(buttonLaunchGame, isActivated ? 1 : 0, CHANGE_TAB_ANIMATION_DURATION_IN_SECONDS);
+            buttonLaunchGame.IsEnabled = isActivated;
 
             // Load mods
             _currentGameName = "HeureH";
@@ -425,8 +443,9 @@ namespace GeneralsUltimateExperience
                 new List<Grid> { gridGenerals, gridHeureH },
                 new List<double> { Convert.ToInt32(_currentGameName.Equals("Generals")), Convert.ToInt32(_currentGameName.Equals("HeureH")) },
                 new List<ComboBox> { comboBoxMapsGenerals, comboBoxMapsHeureH },
-                new List<CheckBox> { checkBoxGentoolGenerals, checkBoxGentoolHeureH },
-                new List<CheckBox> { checkBoxForceZoomGenerals, checkBoxForceZoomHeureH });
+                (int)Properties.Settings.Default["FullscreenMode"] == 2,
+                (bool)Properties.Settings.Default["Current4g"], 
+                buttonLaunchGame);
 
             // Evenements sur changement de tab
             tabControl.SelectionChanged += tabControl_SelectionChanged;
@@ -437,7 +456,7 @@ namespace GeneralsUltimateExperience
             // Réappliquer les sélection après update
             if((bool)Properties.Settings.Default["JustUpdated"])
             {
-                ModFactory.AllGamesRefreshForceZoom();
+                ModFactory.AllGamesRefreshCameraSettings();
                 ModFactory.AllGamesRefreshFullscreenMode();
                 ModFactory.AllGamesRefreshGentool();
                 Properties.Settings.Default["JustUpdated"] = false;
@@ -449,6 +468,15 @@ namespace GeneralsUltimateExperience
 
             // Démarrer le détecteur de lancement
             MonitorGameRunning();
+        }
+
+        private void ButtonLaunchGame_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            double target;
+            if ((bool)e.NewValue) target = 1;
+            else target = 0;
+
+            ModFactory.ButtonAnimation(buttonLaunchGame, target, CHANGE_MOD_ANIMATION_DURATION_IN_SECONDS);
         }
 
         private void MetroWindow_MouseMove(object sender, MouseEventArgs e)
@@ -486,10 +514,6 @@ namespace GeneralsUltimateExperience
                 imageDeFond0.Opacity = 1;
                 labelTitleMaps.Opacity = 1;
                 comboBoxMapsHeureH.Opacity = 1;
-                labelTitleForceZoom.Opacity = 1;
-                labelTitleGentool.Opacity = 1;
-                checkBoxForceZoomHeureH.Opacity = 1;
-                checkBoxGentoolHeureH.Opacity = 1;
             };
             imageDeFond1.BeginAnimation(UIElement.OpacityProperty, animation);
             buttonLaunchGame.BeginAnimation(UIElement.OpacityProperty, animation);
@@ -498,10 +522,6 @@ namespace GeneralsUltimateExperience
             richTextbox.BeginAnimation(UIElement.OpacityProperty, animation);
             labelTitleMaps.BeginAnimation(UIElement.OpacityProperty, animation);
             comboBoxMapsHeureH.BeginAnimation(UIElement.OpacityProperty, animation);
-            labelTitleForceZoom.BeginAnimation(UIElement.OpacityProperty, animation);
-            labelTitleGentool.BeginAnimation(UIElement.OpacityProperty, animation);
-            checkBoxForceZoomHeureH.BeginAnimation(UIElement.OpacityProperty, animation);
-            checkBoxGentoolHeureH.BeginAnimation(UIElement.OpacityProperty, animation);
         }
 
         private void MetroWindow_ContentRendered(object sender, EventArgs e)
@@ -599,9 +619,9 @@ namespace GeneralsUltimateExperience
         private void ActiverGregwareCustomizations()
         {
             // Initialisation
-            bool isFullscreenGregware = (bool)Properties.Settings.Default["FullscreenModeGregware"];
+            bool isFullscreenGregware = (int)Properties.Settings.Default["FullscreenMode"] == 1;
             bool isScrollGregware = (bool)Properties.Settings.Default["ScrollGregware"];
-            bool isGentool = (bool)Properties.Settings.Default[string.Format("Current{0}Gentool", _currentGameName)];
+            bool isGentool = (int)Properties.Settings.Default["FullscreenMode"] == 2;
             int resolutionX = 0;
             int resolutionY = 0;
 
@@ -622,7 +642,7 @@ namespace GeneralsUltimateExperience
 
             // Activer
             _fullScreenGregware = new GregwareCustomizations(isFullscreenGregware, isScrollGregware, isGentool, resolutionX, resolutionY, _uiScheduler);
-            _fullScreenGregware.Activer();
+            _fullScreenGregware.Activer(_gameProcessId);
         }
 
         private void BlockIfGameRunning()
@@ -642,7 +662,8 @@ namespace GeneralsUltimateExperience
 
         public static bool IsGameRunning()
         {
-            return Process.GetProcessesByName("game.dat").FirstOrDefault() != default(Process);
+            //return Process.GetProcessesByName("game.dat").FirstOrDefault() != default(Process);
+            return Process.GetProcesses().Any(p => p.Id == _gameProcessId);
         }
 
         private void RefreshRemoteVersion()
@@ -703,7 +724,7 @@ namespace GeneralsUltimateExperience
 
             if(IsGameRunning())
             {
-                CustomMessageBox.Show(this, string.Format("Mise à jour impossible : le jeu est en cours d'exécution.{0}{0}Quitte d'abord le jeu (si nécessaire via Gestionnaire des tâches => fin de tâche sur game.dat)",
+                CustomMessageBox.Show(this, string.Format("Mise à jour impossible : le jeu est en cours d'exécution.{0}{0}Quitte d'abord le jeu (si nécessaire via Gestionnaire des tâches => fin de tâche sur generals.exe et/ou game.dat)",
                         Environment.NewLine), "Mise à jour", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -785,7 +806,7 @@ namespace GeneralsUltimateExperience
             sw.WriteLine("UseDoubleClickAttackMove = no");
             sw.WriteLine("UseLightMap = yes");
             sw.WriteLine("UseShadowDecals = yes");
-            sw.WriteLine("UseShadowVolumes = yes");
+            sw.WriteLine("UseShadowVolumes = no");
             sw.WriteLine("VoiceVolume = 60");
             sw.Close();
         }

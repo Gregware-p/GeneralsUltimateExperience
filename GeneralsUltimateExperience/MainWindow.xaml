@@ -25,10 +25,10 @@
                 </ContextMenu>
             </Button.ContextMenu>
         </Button>
-        <Button x:Name="buttonLaunchGame" Margin="0,0,50,55" Width="38" Height="38" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="buttonLaunchGame_Click" Opacity="0" BorderThickness="0" Panel.ZIndex="2" ToolTip="Démarrer la partie">
+        <Button x:Name="buttonLaunchGame" Margin="0,0,45,55" Width="38" Height="38" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="buttonLaunchGame_Click" Opacity="0" BorderThickness="0" Panel.ZIndex="2" ToolTip="Démarrer la partie" RenderTransformOrigin="0.079,-0.62">
             <Button.Template>
                 <ControlTemplate>
-                    <Image Source="/GeneralsUltimateExperience;component/Images/btnStart.png"/>
+                    <Image Name="_image" Source="/GeneralsUltimateExperience;component/Images/btnStart.png"/>
                 </ControlTemplate>
             </Button.Template>
         </Button>
@@ -47,90 +47,9 @@
                Background="Transparent" FontFamily="Verdana" FontSize="11" x:FieldModifier="public" Opacity="0" FontWeight="Bold" Content="Paquet de maps non officielles"/>
         <ComboBox x:Name="comboBoxMapsGenerals" HorizontalAlignment="Left" Margin="300,523,0,0" VerticalAlignment="Top" Width="189" Opacity="0" />
         <ComboBox x:Name="comboBoxMapsHeureH" HorizontalAlignment="Left" Margin="300,523,0,0" VerticalAlignment="Top" Width="189" Opacity="0" />
-        <Label x:Name="labelTitleForceZoom" Margin="515,497,195,0" VerticalAlignment="Top" BorderThickness="0" Foreground="White" 
-               Background="Transparent" FontFamily="Verdana" FontSize="11" x:FieldModifier="public" Opacity="0" FontWeight="Bold" Content="Zoom libre">
-            <Label.ToolTip>
-                <TextBlock>Augmente les possibilités de zoom
-                <LineBreak /> - idéal pour multi - dézoom important tout en évitant les problèmes de stabilité de Gentool
-                <LineBreak /> - déconseillé en solo car modifie les zooms prévus dans les animations
-                <LineBreak /> - affiner les réglages via options -> paramètres</TextBlock>
-            </Label.ToolTip>
-        </Label>
-        <CheckBox x:Name="checkBoxForceZoomGenerals" HorizontalAlignment="Left" Margin="520,525,0,0" VerticalAlignment="Top"
-               FontFamily="Verdana" FontSize="11" x:FieldModifier="public" Opacity="0" >
-            <TextBlock Text="Activé" Margin="0,1,0,0"/>
-            <CheckBox.Style>
-                <Style TargetType="CheckBox">
-                    <Style.Triggers>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Foreground" Value="Gray" />
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="True">
-                            <Setter Property="Foreground" Value="White" />
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </CheckBox.Style>
-        </CheckBox>
-        <CheckBox x:Name="checkBoxForceZoomHeureH" HorizontalAlignment="Left" Margin="520,525,0,0" VerticalAlignment="Top" 
-               FontFamily="Verdana" FontSize="11" x:FieldModifier="public" Opacity="0">
-            <TextBlock Text="Activé" Margin="0,1,0,0"/>
-            <CheckBox.Style>
-                <Style TargetType="CheckBox">
-                    <Style.Triggers>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Foreground" Value="Gray" />
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="True">
-                            <Setter Property="Foreground" Value="White" />
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </CheckBox.Style>
-        </CheckBox>
-        <Label x:Name="labelTitleGentool" Margin="610,497,93,0" VerticalAlignment="Top" BorderThickness="0" Foreground="White" 
-               Background="Transparent" FontFamily="Verdana" FontSize="11" x:FieldModifier="public" Opacity="0" FontWeight="Bold" Content="Gentool">
-            <Label.ToolTip>
-                <TextBlock>Active Gentool, sorte de patch pour le jeu qui corrige de nombreux bugs
-                <LineBreak /> - accentue les problèmes de stabilité contre l'IA</TextBlock>
-            </Label.ToolTip>
-        </Label>
-        <CheckBox x:Name="checkBoxGentoolGenerals" HorizontalAlignment="Left" Margin="614,525,0,0" VerticalAlignment="Top"
-               FontFamily="Verdana" FontSize="11" x:FieldModifier="public" Opacity="0" >
-            <TextBlock Text="Activé" Margin="0,1,0,0"/>
-            <CheckBox.Style>
-            <Style TargetType="CheckBox">
-                <Style.Triggers>
-                    <Trigger Property="IsEnabled" Value="False">
-                        <Setter Property="Foreground" Value="Gray" />
-                    </Trigger>
-                    <Trigger Property="IsEnabled" Value="True">
-                        <Setter Property="Foreground" Value="White" />
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-            </CheckBox.Style>
-        </CheckBox>
-        <CheckBox x:Name="checkBoxGentoolHeureH" HorizontalAlignment="Left" Margin="614,525,0,0" VerticalAlignment="Top" 
-               FontFamily="Verdana" FontSize="11" x:FieldModifier="public" Opacity="0">
-            <TextBlock Text="Activé" Margin="0,1,0,0"/>
-            <CheckBox.Style>
-                <Style TargetType="CheckBox">
-                    <Style.Triggers>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Foreground" Value="Gray" />
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="True">
-                            <Setter Property="Foreground" Value="White" />
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </CheckBox.Style>
-        </CheckBox>
         <Rectangle x:Name="imageDeFond0" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="300,63,0,0" Width="450" Height="337" Opacity="0" Fill="Black" />
         <Image x:Name="imageDeFond1" VerticalAlignment="Bottom" Margin="300,63,50,200" Opacity="0" />
         <Image x:Name="imageDeFond2" VerticalAlignment="Bottom" Margin="300,63,50,200" Opacity="0" />
-
         <Canvas x:Name="canvasLoading" Margin="0,0,0,0" Visibility="Hidden" Panel.ZIndex="1000" x:FieldModifier="public">
             <Canvas.Background>
                 <ImageBrush ImageSource="/GeneralsUltimateExperience;component/Images/Splash.png" TileMode="None" />

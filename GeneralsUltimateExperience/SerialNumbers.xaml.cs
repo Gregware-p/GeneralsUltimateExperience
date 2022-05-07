@@ -127,7 +127,7 @@ namespace GeneralsUltimateExperience
 
             if (MainWindow.IsGameRunning())
             {
-                CustomMessageBox.Show(this, string.Format("Changement de numéro de série impossible : le jeu est en cours d'exécution.{0}{0}Quitte d'abord le jeu (si nécessaire via Gestionnaire des tâches => fin de tâche sur game.dat)",
+                CustomMessageBox.Show(this, string.Format("Changement de numéro de série impossible : le jeu est en cours d'exécution.{0}{0}Quitte d'abord le jeu (si nécessaire via Gestionnaire des tâches => fin de tâche sur generals.exe et/ou game.dat)",
                         Environment.NewLine), "Changement de numéro de série", MessageBoxButton.OK, MessageBoxImage.Error);
                 SetActivationDesControles(true);
                 return;

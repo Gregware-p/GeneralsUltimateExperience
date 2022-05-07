@@ -7,7 +7,6 @@ using System.Windows.Controls;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using MahApps.Metro.Controls;
-using System.Globalization;
 
 namespace GeneralsUltimateExperience
 {
@@ -80,8 +79,10 @@ namespace GeneralsUltimateExperience
         private bool _scrollChanged = false;
         private int _zoomCameraHeightInitialValue;
         private double _zoomCameraSpeedInitialValue;
-        private bool _fullScreenModeGregwareInitialValue;
-        private bool _scrollWasdInitialValue;
+        private int _fullScreenModeInitialValue;
+        private bool _isScrollWasdInitialValue;
+        private bool _isZoomLibreInitialValue;
+        private bool _is4gInitialValue;
 
         public Settings(string pathToOptionIniGenerals, string pathToOptionIniHeureH)
         {
@@ -152,17 +153,26 @@ namespace GeneralsUltimateExperience
             }
 
             // Initialiser le mode fullscreen
-            if ((bool)Properties.Settings.Default["FullscreenModeGregware"])
+            _fullScreenModeInitialValue = (int)Properties.Settings.Default["FullscreenMode"];
+            switch (_fullScreenModeInitialValue)
             {
-                radioButtonFullscreenModeOriginal.IsChecked = false;
-                radioButtonFullscreenModeGregware.IsChecked = true;
+                case 1:
+                    radioButtonFullscreenModeOriginal.IsChecked = false;
+                    radioButtonFullscreenModeGregware.IsChecked = true;
+                    radioButtonFullscreenModeGentool.IsChecked = false;
+                    break;
+                case 2:
+                    radioButtonFullscreenModeOriginal.IsChecked = false;
+                    radioButtonFullscreenModeGregware.IsChecked = false;
+                    radioButtonFullscreenModeGentool.IsChecked = true;
+                    checkBoxOther4g.IsEnabled = false;
+                    break;
+                default:
+                    radioButtonFullscreenModeOriginal.IsChecked = true;
+                    radioButtonFullscreenModeGregware.IsChecked = false;
+                    radioButtonFullscreenModeGentool.IsChecked = false;
+                    break;
             }
-            else
-            {
-                radioButtonFullscreenModeOriginal.IsChecked = true;
-                radioButtonFullscreenModeGregware.IsChecked = false;
-            }
-            _fullScreenModeGregwareInitialValue = (bool)radioButtonFullscreenModeGregware.IsChecked;
 
             // Initialiser les sliders 
             _zoomCameraHeightInitialValue = (int)Properties.Settings.Default["ZoomMaxCameraHeight"];
@@ -178,8 +188,24 @@ namespace GeneralsUltimateExperience
             labelScrollFactor.Content = string.Format("Vitesse du scroll ({0}%)", (int)((int)sliderScrollFactor.Value / 145.0 * 100));
 
             // Initialiser le scroll wasd
-            _scrollWasdInitialValue = (bool)Properties.Settings.Default["ScrollGregware"];
-            checkBoxMiscScrollWasd.IsChecked = _scrollWasdInitialValue;
+            _isScrollWasdInitialValue = (bool)Properties.Settings.Default["ScrollGregware"];
+            checkBoxMiscScrollWasd.IsChecked = _isScrollWasdInitialValue;
+
+            // Initialiser le zoom libre
+            _isZoomLibreInitialValue = (bool)Properties.Settings.Default["CurrentForceZoom"];
+            checkBoxZoomLibre.IsChecked = _isZoomLibreInitialValue;
+            if (!_isZoomLibreInitialValue)
+            {
+                labelCameraHeight.IsEnabled = false;
+                sliderCameraHeight.IsEnabled = false;
+                labelCameraSpeed.IsEnabled = false;
+                sliderCameraSpeed.IsEnabled = false;
+            }
+
+            // Initialiser 4g 
+            _is4gInitialValue = (bool)Properties.Settings.Default["Current4g"];
+            checkBoxOther4g.IsChecked = _is4gInitialValue;
+            if (_is4gInitialValue) radioButtonFullscreenModeGentool.IsEnabled = false;
 
             // Surveiller les changements
             comboBoxGenerals.SelectionChanged += ComboBoxGenerals_SelectionChanged;
@@ -187,6 +213,41 @@ namespace GeneralsUltimateExperience
             sliderCameraHeight.ValueChanged += SliderCameraHeight_ValueChanged;
             sliderCameraSpeed.ValueChanged += SliderCameraSpeed_ValueChanged;
             sliderScrollFactor.ValueChanged += SliderScrollFactor_ValueChanged;
+            checkBoxOther4g.Checked += CheckBoxOther4g_Checked;
+            checkBoxOther4g.Unchecked += CheckBoxOther4g_Unchecked;
+            radioButtonFullscreenModeGentool.Checked += RadioButtonFullscreenModeGentool_Checked;
+            radioButtonFullscreenModeGentool.Unchecked += RadioButtonFullscreenModeGentool_Unchecked;
+            checkBoxZoomLibre.Checked += CheckBoxZoomLibre_CheckedChange;
+            checkBoxZoomLibre.Unchecked += CheckBoxZoomLibre_CheckedChange;
+        }
+
+        private void CheckBoxZoomLibre_CheckedChange(object sender, RoutedEventArgs e)
+        {
+            bool enabled = (bool)checkBoxZoomLibre.IsChecked;
+            labelCameraHeight.IsEnabled = enabled;
+            sliderCameraHeight.IsEnabled = enabled;
+            labelCameraSpeed.IsEnabled = enabled;
+            sliderCameraSpeed.IsEnabled = enabled;
+        }
+
+        private void RadioButtonFullscreenModeGentool_Unchecked(object sender, RoutedEventArgs e)
+        {
+            checkBoxOther4g.IsEnabled = true;
+        }
+
+        private void RadioButtonFullscreenModeGentool_Checked(object sender, RoutedEventArgs e)
+        {
+            checkBoxOther4g.IsEnabled = false;
+        }
+
+        private void CheckBoxOther4g_Checked(object sender, RoutedEventArgs e)
+        {
+            radioButtonFullscreenModeGentool.IsEnabled = false;
+        }
+
+        private void CheckBoxOther4g_Unchecked(object sender, RoutedEventArgs e)
+        {
+            radioButtonFullscreenModeGentool.IsEnabled = true;
         }
 
         private void SliderScrollFactor_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -244,24 +305,48 @@ namespace GeneralsUltimateExperience
             // Settings
             int newCameraHeight = (int)sliderCameraHeight.Value;
             double newCameraSpeed = Math.Round(sliderCameraSpeed.Value / 100, 1);
-            bool gregWareFullscreen = (bool)radioButtonFullscreenModeGregware.IsChecked;
-            bool scrollWasd = (bool)checkBoxMiscScrollWasd.IsChecked;
-            Properties.Settings.Default["ZoomMaxCameraHeight"] = newCameraHeight;
-            Properties.Settings.Default["ZoomCameraAdjustSpeed"] = newCameraSpeed;
-            Properties.Settings.Default["FullscreenModeGregware"] = gregWareFullscreen;
-            Properties.Settings.Default["ScrollGregware"] = scrollWasd;
-            Properties.Settings.Default.Save();
+            int fullscreenMode;
+            if ((bool)radioButtonFullscreenModeOriginal.IsChecked == true) fullscreenMode = 0;
+            else if ((bool)radioButtonFullscreenModeGregware.IsChecked == true) fullscreenMode = 1;
+            else if ((bool)radioButtonFullscreenModeGentool.IsChecked == true) fullscreenMode = 2;
+            else throw new Exception("Mode de fullscreen inconnu");
+            bool isScrollWasd = (bool)checkBoxMiscScrollWasd.IsChecked;
+            bool isZoomLibre = (bool)checkBoxZoomLibre.IsChecked;
+            bool is4g = (bool)checkBoxOther4g.IsChecked;
+            Properties.Settings.Default["ScrollGregware"] = isScrollWasd;
 
             // Camera
             if(newCameraHeight != _zoomCameraHeightInitialValue || newCameraSpeed != _zoomCameraSpeedInitialValue)
             {
-                ModFactory.AllGamesRefreshForceZoom();
+                Properties.Settings.Default["ZoomMaxCameraHeight"] = newCameraHeight;
+                Properties.Settings.Default["ZoomCameraAdjustSpeed"] = newCameraSpeed;
+                Properties.Settings.Default.Save();
+                ModFactory.AllGamesRefreshCameraSettings();
             }
 
             // Fullscreen mode
-            if(gregWareFullscreen != _fullScreenModeGregwareInitialValue)
+            if(fullscreenMode != _fullScreenModeInitialValue)
             {
-                ModFactory.AllGamesRefreshFullscreenMode();
+                Properties.Settings.Default["FullscreenMode"] = fullscreenMode;
+                Properties.Settings.Default.Save();
+                if(_fullScreenModeInitialValue == 1 || fullscreenMode == 1) ModFactory.AllGamesRefreshFullscreenMode();
+                if(_fullScreenModeInitialValue == 2 || fullscreenMode == 2) ModFactory.AllGamesRefreshGentool();
+            }
+
+            // Zoom libre
+            if(isZoomLibre != _isZoomLibreInitialValue)
+            {
+                Properties.Settings.Default["CurrentForceZoom"] = isZoomLibre;
+                Properties.Settings.Default.Save();
+                ModFactory.AllGamesRefreshZoomLibre(isZoomLibre);
+            }
+
+            // Patch 4g
+            if(is4g != _is4gInitialValue)
+            {
+                Properties.Settings.Default["Current4g"] = is4g;
+                Properties.Settings.Default.Save();
+                ModFactory.AllGamesRefresh4g(is4g);
             }
 
             // Fermer la fenêtre

@@ -13,7 +13,6 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using System.Globalization;
 
 namespace GeneralsUltimateExperience
 {
@@ -32,7 +31,8 @@ namespace GeneralsUltimateExperience
         private const int DELAY_BETWEEN_IO_RETRY_MS = 500;
         private const string MESSAGE_ACCESS_PROBLEM_1 = "Problème d'accès lors du déplacement d'un {0}. Réessayer ? Si le jeu est en cours d'exécution quittez-le.{1}{1}Source : {2}{1}Destination : {3}{1}{1}Attention si le programme ne parvient pas à copier/déplacer les fichiers il perdra ses références et ne fonctionnera plus correctement. Une réinstallation complète sera alors nécessaire :-( {1}{1}Détails : {4}";
         private const string MESSAGE_ACCESS_PROBLEM_2 = "Voulez-vous vraiment interrompre le déplacement ?{0}{0}Attention le programme perdra ses références et ne fonctionnera plus correctement !!! Une réinstallation complète sera nécessaire :-(";
-        private readonly List<string> GENTOOL_FILES = new List<string> { "d3d8.cfg", "d3d8.dlL" };
+        private readonly List<string> GENTOOL_FILES = new List<string> { "d3d8.cfg", "d3d8.dlL", "GenToolUpdater.exe" };
+        private readonly List<string> PATCH4G_FILES = new List<string> { "game.dat", "generals.exe" };
         #endregion
 
         #region structs
@@ -44,7 +44,6 @@ namespace GeneralsUltimateExperience
             public string Title;
             public string DisplayName;
             public int Order;
-            public bool IsGentoolCompatible;
         }
 
         private struct Contenu
@@ -84,14 +83,16 @@ namespace GeneralsUltimateExperience
         private string _pathToMapPacks;
         private string _pathToGentool;
         private string _pathToGameDataIni;
+        private string _pathToPatch4g;
         private TaskScheduler _uiScheduler;
         private ComboBox _comboboxMapPack;
-        private CheckBox _checkBoxGentool;
-        private CheckBox _checkBoxForceZoom;
+        private bool _isGentool;
+        private bool _isPatch4g;
+        private Button _buttonLaunchGame;
         #endregion
 
         #region Constructor
-        public ModFactory(MainWindow window, string gameName, string pathToApplication, string pathToMaps, TaskScheduler uiScheduler, Grid panelButtons, double buttonOpacity, ComboBox comboboxMapPack, CheckBox checkBoxGentool, CheckBox checkBoxForceZoom)
+        public ModFactory(MainWindow window, string gameName, string pathToApplication, string pathToMaps, TaskScheduler uiScheduler, Grid panelButtons, double buttonOpacity, ComboBox comboboxMapPack, bool isGentool, bool isPatch4g, Button buttonLaunchGame)
         {
             _window = window;
             _gameName = gameName;
@@ -103,14 +104,12 @@ namespace GeneralsUltimateExperience
             _pathToMapPacks = string.Format("{0}\\MapPacks\\{1}", _pathToApplication, _gameName);
             _pathToGentool = string.Format("{0}\\Gentool", _pathToApplication);
             _pathToGameDataIni = string.Format("{0}\\Games\\{1}\\{2}", _pathToApplication, _gameName, GAMEDATA_FILE_RELATIVE_PATH);
+            _pathToPatch4g = string.Format("{0}\\Patch4g", _pathToApplication);
             _uiScheduler = uiScheduler;
             _comboboxMapPack = comboboxMapPack;
-            _checkBoxGentool = checkBoxGentool;
-            _checkBoxGentool.Checked += _checkBoxGentool_Checked;
-            _checkBoxGentool.Unchecked += _checkBoxGentool_Checked;
-            _checkBoxForceZoom = checkBoxForceZoom;
-            _checkBoxForceZoom.Checked += _checkBoxForceZoom_Checked;
-            _checkBoxForceZoom.Unchecked += _checkBoxForceZoom_Checked;
+            _isGentool = isGentool;
+            _isPatch4g = isPatch4g;
+            _buttonLaunchGame = buttonLaunchGame;
 
             string xmlPath = string.Format("{0}\\{1}", _pathToApplication, XML_FILENAME);
             LoadXml(xmlPath);
@@ -145,8 +144,8 @@ namespace GeneralsUltimateExperience
                 };
 
                 button.Effect = new GrayscaleEffect.GrayscaleEffect();
-                button.MouseEnter += (s, e) => { if (s != ActiveModButton) ButtonAnimation((Button)s, 1.0, MainWindow.MOD_BUTTON_FADE_DURATION_IN_SECONDS); };
-                button.MouseLeave += (s, e) => { if (s != ActiveModButton) ButtonAnimation((Button)s, 0, MainWindow.MOD_BUTTON_FADE_DURATION_IN_SECONDS); };
+                button.MouseEnter += (s, e) => { if (s != ActiveModButton) ButtonAnimation((Button)s, 1.0, MainWindow.BUTTON_FADE_DURATION_IN_SECONDS); };
+                button.MouseLeave += (s, e) => { if (s != ActiveModButton) ButtonAnimation((Button)s, 0, MainWindow.BUTTON_FADE_DURATION_IN_SECONDS); };
                 button.Opacity = buttonOpacity;
                 button.Click += ButtonChangeMod_Click;
 
@@ -192,12 +191,6 @@ namespace GeneralsUltimateExperience
             foreach (string mapPack in _mapPacks.Keys) _comboboxMapPack.Items.Add(new ComboBoxItem { Content = mapPack });
             _comboboxMapPack.SelectedItem = _comboboxMapPack.Items.GetItemAt((int)Properties.Settings.Default[string.Format("Current{0}MapPack", _gameName)]);
             _comboboxMapPack.SelectionChanged += _comboboxMapPack_SelectionChanged;
-
-            // Gentool
-            _checkBoxGentool.IsChecked = (bool)Properties.Settings.Default[string.Format("Current{0}Gentool", _gameName)];
-
-            // Zoom forcé
-            _checkBoxForceZoom.IsChecked = (bool)Properties.Settings.Default[string.Format("Current{0}ForceZoom", _gameName)];
         }
         #endregion
 
@@ -224,18 +217,17 @@ namespace GeneralsUltimateExperience
 
         private bool IsForceZoom
         {
-            get { return bool.Parse(Properties.Settings.Default[string.Format("Current{0}ForceZoom", _gameName)].ToString()); }
+            get { return bool.Parse(Properties.Settings.Default[string.Format("CurrentForceZoom", _gameName)].ToString()); }
         }
         #endregion
 
         #region Methods
-        public static void Init(MainWindow window, List<string> gameNames, List<string> pathToMaps, string pathToApplication, TaskScheduler uiScheduler, List<Grid> panelButtons, List<double> buttonOpacities,
-            List<ComboBox> comboboxMapPacks, List<CheckBox> checkBoxesGentool, List<CheckBox> checkBoxesForceZoom)
+        public static void Init(MainWindow window, List<string> gameNames, List<string> pathToMaps, string pathToApplication, TaskScheduler uiScheduler, List<Grid> panelButtons, List<double> buttonOpacities, List<ComboBox> comboboxMapPacks, bool isGentool, bool isPAtch4g, Button buttonLaunchGame)
         {
             _modFactories = new Dictionary<string, ModFactory>();
             for (int i = 0; i < gameNames.Count; i++)
             {
-                _modFactories.Add(gameNames[i], new ModFactory(window, gameNames[i], pathToApplication, pathToMaps[i], uiScheduler, panelButtons[i], buttonOpacities[i], comboboxMapPacks[i], checkBoxesGentool[i], checkBoxesForceZoom[i]));
+                _modFactories.Add(gameNames[i], new ModFactory(window, gameNames[i], pathToApplication, pathToMaps[i], uiScheduler, panelButtons[i], buttonOpacities[i], comboboxMapPacks[i], isGentool, isPAtch4g, buttonLaunchGame));
             }
         }
 
@@ -256,33 +248,33 @@ namespace GeneralsUltimateExperience
             }
         }
 
-        public static void AllGamesNoGentool()
+        public static void AllGamesRefresh4g(bool enabled)
         {
             foreach (ModFactory modFactory in _modFactories.Values)
             {
-                modFactory.NoGentool();
+                modFactory.Activer4g(enabled);
             }
         }
 
-        public static void AllGamesNoForceZoom()
+        public static void AllGamesRefreshCameraSettings()
         {
             foreach (ModFactory modFactory in _modFactories.Values)
             {
-                modFactory.NoForceZoom();
+                modFactory.RefreshGameDataIniCameraSettings();
             }
         }
 
-        public static void AllGamesRefreshForceZoom()
+        public static void AllGamesRefreshZoomLibre(bool enabled)
         {
             foreach (ModFactory modFactory in _modFactories.Values)
             {
-                modFactory.RefreshGameDataIniZoomForce();
+                modFactory.RefreshZoomLibre(enabled);
             }
         }
 
         public static void AllGamesRefreshFullscreenMode()
         {
-            bool windowed = (bool)Properties.Settings.Default["FullscreenModeGregware"];
+            bool windowed = (int)Properties.Settings.Default["FullscreenMode"] == 1; // seulement pour mode Gregware
             foreach (ModFactory modFactory in _modFactories.Values)
             {
                 modFactory.SetFullscreenModeInGameDataIni(windowed);
@@ -291,9 +283,10 @@ namespace GeneralsUltimateExperience
 
         public static void AllGamesRefreshGentool()
         {
+            bool enabled = (int)Properties.Settings.Default["FullscreenMode"] == 2;
             foreach (ModFactory modFactory in _modFactories.Values)
             {
-                modFactory.RefreshGentool();
+                modFactory.ActiverGentool(enabled);
             }
         }
 
@@ -330,22 +323,20 @@ namespace GeneralsUltimateExperience
             bool modMaps = _comboboxMapPack.SelectedIndex == 1;
             if (modMaps) ChangeMapPack(0, true); // On est dans les cas où les maps du mod étaient sélectionnées, il faut les remettre à leur place
 
-            // Gentool
-            if ((bool)_checkBoxGentool.IsChecked && !_definitions[modId].IsGentoolCompatible)
-            {
-                // On est dans le cas où Gentool était activé mais on passe sur un mod qui ne le supporte pas, du coup il faut le désactiver avant de changer de mod
-                _checkBoxGentool.IsChecked = false;
-            }
-
             // Enlever le mod précédent
             CleanPreviousMod();
 
             // Mettre le nouveau mod
-            ApplyNextMod(modId);
+            bool launchActivated = ApplyNextMod(modId);
 
             // Ne plus marquer comme "en changement"
             Properties.Settings.Default[string.Format("Current{0}Mod", _gameName)] = modId;
             Properties.Settings.Default[string.Format("Changing{0}Mod", _gameName)] = false;
+            Properties.Settings.Default.Save();
+
+            // Traiter l'activation du launch
+            _buttonLaunchGame.IsEnabled = launchActivated;
+            Properties.Settings.Default[string.Format("CurrentLaunchActivated{0}", _gameName)] = launchActivated;
             Properties.Settings.Default.Save();
 
             // Maps
@@ -371,7 +362,8 @@ namespace GeneralsUltimateExperience
 
         public void ActiverGentool(bool enabled)
         {
-            if (enabled)
+            _isGentool = enabled;
+            if (_isGentool)
             {
                 foreach (string filename in GENTOOL_FILES)
                 {
@@ -387,20 +379,37 @@ namespace GeneralsUltimateExperience
                 }
             }
         }
-
-        public void ActiverZoomForce(bool enabled)
+        
+        public void Activer4g(bool enabled)
         {
-            bool settings = (bool)Properties.Settings.Default[string.Format("Current{0}ForceZoom", _gameName)];
-            if (settings == enabled) return;
+            _isPatch4g = enabled;
+            if (_isPatch4g)
+            {
+                foreach (string filename in PATCH4G_FILES)
+                {
+                    File.Copy(string.Format("{0}\\{1}\\patch\\{2}", _pathToPatch4g, _gameName, filename), string.Format("{0}\\{1}", _pathToGame, filename), true);
+                }
+            }
+            else
+            {
+                foreach (string filename in PATCH4G_FILES)
+                {
+                    File.Copy(string.Format("{0}\\{1}\\original\\{2}", _pathToPatch4g, _gameName, filename), string.Format("{0}\\{1}", _pathToGame, filename), true);
+                }
+            }
+        }
+
+        public void RefreshZoomLibre(bool enabled)
+        {
             RefreshGameDataIniZoomForce(CurrentMod, enabled);
-            Properties.Settings.Default[string.Format("Current{0}ForceZoom", _gameName)] = enabled;
+            Properties.Settings.Default["CurrentForceZoom"] = enabled;
             Properties.Settings.Default.Save();
         }
 
         public void RefreshControls(bool fromChangeTab = false)
         {
             // Désactiver tous les boutons
-            foreach (Button button in _modButtons.Values) ButtonAnimation(button, 0, MainWindow.MOD_BUTTON_FADE_DURATION_IN_SECONDS);
+            foreach (Button button in _modButtons.Values) ButtonAnimation(button, 0, MainWindow.BUTTON_FADE_DURATION_IN_SECONDS);
             foreach (Label label in _modLabels.Values) label.Opacity = 1;
             foreach (Rectangle rectangle in _modRectangles.Values) rectangle.Opacity = MainWindow.MOD_BUTTON_BLACK_RECTANGLE_OPACTIY;
 
@@ -475,15 +484,6 @@ namespace GeneralsUltimateExperience
             ComboBoxItem itemModMaps = (ComboBoxItem)_comboboxMapPack.Items[1];
             if (hasMaps) itemModMaps.Visibility = Visibility.Visible;
             else itemModMaps.Visibility = Visibility.Collapsed;
-
-            // Rafraichir la checkbox Gentool
-            bool isGentoolCompatible = _definitions[CurrentMod].IsGentoolCompatible;
-            _checkBoxGentool.IsEnabled = isGentoolCompatible;
-        }
-
-        private void RefreshGentool()
-        {
-            ActiverGentool((bool)_checkBoxGentool.IsChecked);
         }
 
         private void RefreshGameDataIni(string modId)
@@ -498,20 +498,20 @@ namespace GeneralsUltimateExperience
             RefreshGameDataIniFullscreenMode(modId);
         }
 
-        public void RefreshGameDataIniZoomForce()
+        public void RefreshGameDataIniCameraSettings()
         {
-            if (_checkBoxForceZoom.IsChecked != null && (bool)_checkBoxForceZoom.IsChecked)
+            if ((bool)Properties.Settings.Default["CurrentForceZoom"])
             {
-                SetForceZoomValuesInGameDataIni();
+                SetCameraSettingsInGameDataIni();
             }
-        }
+        }        
 
         private void RefreshGameDataIniZoomForce(string modId, bool enabled, bool onlyIfEnabled = false)
         {
             if (enabled)
             {
                 // * Activer le zoom forcé *
-                SetForceZoomValuesInGameDataIni();
+                SetCameraSettingsInGameDataIni();
             }
             else if (!onlyIfEnabled)
             {
@@ -522,11 +522,11 @@ namespace GeneralsUltimateExperience
 
         private void RefreshGameDataIniFullscreenMode(string modId)
         {
-            bool enabled = (bool)Properties.Settings.Default["FullscreenModeGregware"];
+            bool enabled = (int)Properties.Settings.Default["FullscreenMode"] == 1;
             SetFullscreenModeInGameDataIni(enabled);
         }
 
-        private void SetForceZoomValuesInGameDataIni()
+        private void SetCameraSettingsInGameDataIni()
         {
             // * Activer le zoom forcé *
             int maxCameraHeight = (int)Properties.Settings.Default["ZoomMaxCameraHeight"];
@@ -550,35 +550,6 @@ namespace GeneralsUltimateExperience
                 FillBehavior = FillBehavior.Stop
             };
         }
-        //public static void ChangeTab(string previousGameName, string newGameName)
-        //{
-        //    _modFactories[previousGameName].ChangeTabAnimation(0, () => 
-        //    {
-        //        Refresh(newGameName);
-        //        _modFactories[newGameName].ChangeTabAnimation(1, null);
-        //    });
-        //}
-
-        //private void ChangeTabAnimation(double target, Action doNext)
-        //{
-        //    DoubleAnimation animation = new DoubleAnimation
-        //    {
-        //        To = target,
-        //        BeginTime = TimeSpan.FromSeconds(0),
-        //        Duration = TimeSpan.FromSeconds(2),
-        //        FillBehavior = FillBehavior.Stop
-        //    };
-        //    animation.Completed += (s, a) => 
-        //    {
-        //        _window.imageDeFond.Opacity = target;
-        //        _window.richTextbox.Opacity = target;
-        //        foreach (Button button2 in _modButtons.Values) button2.Opacity = target;
-        //        if(doNext != null) doNext();
-        //    };
-        //    _window.imageDeFond.BeginAnimation(UIElement.OpacityProperty, animation);
-        //    _window.richTextbox.BeginAnimation(UIElement.OpacityProperty, animation);
-        //    foreach (Button button in _modButtons.Values) button.BeginAnimation(UIElement.OpacityProperty, animation);
-        //}
 
         public static void ChangeTabAnimation(string gameName, double target)
         {
@@ -590,14 +561,10 @@ namespace GeneralsUltimateExperience
             if (target == 0)
             {
                 Panel.SetZIndex(_comboboxMapPack, 0);
-                Panel.SetZIndex(_checkBoxGentool, 0);
-                Panel.SetZIndex(_checkBoxForceZoom, 0);
             }
             else
             {
                 Panel.SetZIndex(_comboboxMapPack, 1);
-                Panel.SetZIndex(_checkBoxGentool, 1);
-                Panel.SetZIndex(_checkBoxForceZoom, 1);
             }
 
             DoubleAnimation animation = new DoubleAnimation
@@ -614,19 +581,15 @@ namespace GeneralsUltimateExperience
                 foreach (Button button2 in _modButtons.Values) button2.Opacity = target;
                 foreach (Label label2 in _modLabels.Values.Where(v => v != _modLabels[CurrentMod])) label2.Opacity = target;
                 _comboboxMapPack.Opacity = target;
-                _checkBoxGentool.Opacity = target;
-                _checkBoxForceZoom.Opacity = target;
             };
             _window.labelTitle.BeginAnimation(UIElement.OpacityProperty, animation);
             _window.richTextbox.BeginAnimation(UIElement.OpacityProperty, animation);
             foreach (Button button in _modButtons.Values) button.BeginAnimation(UIElement.OpacityProperty, animation);
             foreach (Label label in _modLabels.Values.Where(v => v != _modLabels[CurrentMod])) label.BeginAnimation(UIElement.OpacityProperty, animation);
             _comboboxMapPack.BeginAnimation(UIElement.OpacityProperty, animation);
-            _checkBoxGentool.BeginAnimation(UIElement.OpacityProperty, animation);
-            _checkBoxForceZoom.BeginAnimation(UIElement.OpacityProperty, animation);
         }
 
-        public void ButtonAnimation(Button button, double target, double duration)
+        public static void ButtonAnimation(Button button, double target, double duration)
         {
             DoubleAnimation animation = new DoubleAnimation
             {
@@ -636,16 +599,6 @@ namespace GeneralsUltimateExperience
                 DecelerationRatio = 0.25,
             };
             ((GrayscaleEffect.GrayscaleEffect)button.Effect).BeginAnimation(GrayscaleEffect.GrayscaleEffect.DesaturationFactorProperty, animation);
-        }
-
-        public void NoGentool()
-        {
-            _checkBoxGentool.IsChecked = false;
-        }
-
-        public void NoForceZoom()
-        {
-            _checkBoxForceZoom.IsChecked = false;
         }
         #endregion
 
@@ -695,22 +648,6 @@ namespace GeneralsUltimateExperience
             RefreshControls();
         }
 
-        private void _checkBoxGentool_Checked(object sender, RoutedEventArgs e)
-        {
-            bool enabled = (bool)_checkBoxGentool.IsChecked;
-            bool settings = (bool)Properties.Settings.Default[string.Format("Current{0}Gentool", _gameName)];
-            if (settings == enabled) return;
-
-            ActiverGentool(enabled);
-            Properties.Settings.Default[string.Format("Current{0}Gentool", _gameName)] = enabled;
-            Properties.Settings.Default.Save();
-        }
-
-        private void _checkBoxForceZoom_Checked(object sender, RoutedEventArgs e)
-        {
-            ActiverZoomForce((bool)_checkBoxForceZoom.IsChecked);
-        }
-
         private void _comboboxMapPack_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             int oldValue = (int)Properties.Settings.Default[string.Format("Current{0}MapPack", _gameName)];
@@ -734,6 +671,11 @@ namespace GeneralsUltimateExperience
             // Remettre les fichiers et dossiers du mod à leur place
             foreach (string filename in _definitions[CurrentMod].Contenu.Mod.Files)
             {
+                if ((_isGentool && GENTOOL_FILES.Contains(filename, StringComparer.OrdinalIgnoreCase))
+                    || (_isPatch4g && PATCH4G_FILES.Contains(filename, StringComparer.OrdinalIgnoreCase)))
+                {
+                    continue;
+                }
                 MoveFile(GetGameFilePath(filename), GetModFilePath(CurrentMod, filename));
             }
             foreach (string foldername in _definitions[CurrentMod].Contenu.Mod.Folders)
@@ -752,8 +694,9 @@ namespace GeneralsUltimateExperience
             }
         }
 
-        private void ApplyNextMod(string modId)
+        private bool ApplyNextMod(string modId)
         {
+            bool res = true;
             if (!modId.Equals(ORIGINAL_MOD_ID))
             {
                 // Sauvegarder les fichiers et dossiers originaux
@@ -769,6 +712,13 @@ namespace GeneralsUltimateExperience
                 // Mettre le fichiers et dossiers du mod
                 foreach (string filename in _definitions[modId].Contenu.Mod.Files)
                 {
+                    if ((_isGentool && GENTOOL_FILES.Contains(filename, StringComparer.OrdinalIgnoreCase))
+                    || (_isPatch4g && PATCH4G_FILES.Contains(filename, StringComparer.OrdinalIgnoreCase)))
+                    {
+                        // Désactiver le boutton launch
+                        res = false;
+                        continue;
+                    }
                     MoveFile(GetModFilePath(modId, filename), GetGameFilePath(filename));
                 }
                 foreach (string foldername in _definitions[modId].Contenu.Mod.Folders)
@@ -779,6 +729,9 @@ namespace GeneralsUltimateExperience
 
             // GameData.ini
             RefreshGameDataIni(modId); // rétablir paramètres
+
+            // Sortir avec le paramètre da'ctivation
+            return res;
         }
 
         private void ChangeMapPack(int newValue, bool noWaitCursor = false, bool noMessage = false)
@@ -1071,7 +1024,6 @@ namespace GeneralsUltimateExperience
                                     elements.ImageName = modNode.Attributes["imageName"].Value;
                                     elements.DisplayName = modNode.Attributes["displayName"].Value;
                                     elements.Order = Int32.Parse(modNode.Attributes["order"].Value);
-                                    elements.IsGentoolCompatible = Boolean.Parse(modNode.Attributes["Gentool"].Value);
                                     elements.Contenu = new Contenu();
                                     elements.Contenu.Original = new ContenuOriginal();
                                     elements.Contenu.Original.Files = new List<string>();

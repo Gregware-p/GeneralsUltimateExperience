@@ -58,7 +58,6 @@ namespace GeneralsUltimateExperience
         {
             GameDataIni gameDataIni = GetGameDataIni(path);
             LineChanger(string.Format("  Windowed = {0}", windowed ? "Yes" : "No"), path, gameDataIni.NoLigneWindowed);
-            string value = windowed ? "Yes" : "No";
         }
 
         public static void LineChanger(string newText, string path, int line_to_edit)

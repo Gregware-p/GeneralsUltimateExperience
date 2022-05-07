@@ -6,7 +6,7 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:GeneralsUltimateExperience"
         mc:Ignorable="d"
-        Title="Paramètres" Width="534" Height="386" Icon="icon.ico" ResizeMode="NoResize" ShowInTaskbar="False" TitleForeground="#cccccc" ContentRendered="MetroWindow_ContentRendered" WindowStartupLocation="CenterOwner">
+        Title="Paramètres" Width="534" Height="440" Icon="icon.ico" ResizeMode="NoResize" ShowInTaskbar="False" TitleForeground="#cccccc" ContentRendered="MetroWindow_ContentRendered" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.Background>
             <ImageBrush ImageSource="/GeneralsUltimateExperience;component/Images/Background.png" TileMode="None" Stretch="UniformToFill" />
@@ -16,50 +16,136 @@
         <ComboBox x:Name="comboBoxGenerals" HorizontalAlignment="Left" Margin="24,67,0,0" VerticalAlignment="Top" Width="189" />
         <Label x:Name="labelHeureH" Content="Heure H" HorizontalAlignment="Left" Margin="20,104,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Verdana" FontSize="13"/>
         <ComboBox x:Name="comboBoxHeureH" HorizontalAlignment="Left" Margin="24,130,0,0" VerticalAlignment="Top" Width="189" />
-        <GroupBox x:Name="groupBoxZoom" Header="Zoom libre" HorizontalAlignment="Left" Margin="277,10,0,0" VerticalAlignment="Top" Height="165" Width="213"/>
-        <Label x:Name="labelCameraHeight" Content="Hauteur caméra (1000)" HorizontalAlignment="Left" Margin="287,41,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Verdana" FontSize="13">
+        <GroupBox x:Name="groupBoxZoom" Header="Zoom libre" HorizontalAlignment="Left" Margin="277,10,0,0" VerticalAlignment="Top" Height="183" Width="213"/>
+        <CheckBox x:Name="checkBoxZoomLibre" HorizontalAlignment="Left" Margin="290,51,0,0" VerticalAlignment="Top"
+               FontFamily="Verdana" FontSize="11" x:FieldModifier="public" >
+            <TextBlock Text="Libérer le zoom" Margin="0,0,0,0" Foreground="White" FontFamily="Verdana" FontSize="13" />
+            <CheckBox.ToolTip>
+                <TextBlock>Augmente les possibilités de zoom
+                <LineBreak /> - vue d'ensemble grâce au dézoom important
+                <LineBreak /> - un peu moins stable du fait du rendu de l'ensemble en permanence
+                <LineBreak /> - déconseillé en solo car modifie les zooms prévus dans les animations
+                <LineBreak /> - affiner les réglages via les deux sliders ci-dessous</TextBlock>
+            </CheckBox.ToolTip>
+        </CheckBox>
+        <Label x:Name="labelCameraHeight" Content="Hauteur caméra (1000)" HorizontalAlignment="Left" Margin="287,75,0,0" VerticalAlignment="Top" FontFamily="Verdana" FontSize="13">
             <Label.ToolTip>
                 <TextBlock>Valeur par défaut : 1000</TextBlock>
             </Label.ToolTip>
+            <Label.Style>
+                <Style TargetType="Label">
+                    <Style.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="Gray" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="True">
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Label.Style>
         </Label>
-        <Slider x:Name="sliderCameraHeight" HorizontalAlignment="Left" Margin="292,67,0,0" VerticalAlignment="Top" Width="194" Minimum="300" Maximum="5000" TickFrequency="50" IsSnapToTickEnabled="True"/>
-        <Label x:Name="labelCameraSpeed" Content="Vitesse du zoom (100%)" HorizontalAlignment="Left" Margin="287,104,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Verdana" FontSize="13">
+        <Slider x:Name="sliderCameraHeight" HorizontalAlignment="Left" Margin="292,101,0,0" VerticalAlignment="Top" Width="194" Minimum="300" Maximum="5000" TickFrequency="50" IsSnapToTickEnabled="True" />
+        <Label x:Name="labelCameraSpeed" Content="Vitesse du zoom (100%)" HorizontalAlignment="Left" Margin="287,138,0,0" VerticalAlignment="Top" FontFamily="Verdana" FontSize="13">
             <Label.ToolTip>
                 <TextBlock>Valeur par défaut : 60%</TextBlock>
             </Label.ToolTip>
+            <Label.Style>
+                <Style TargetType="Label">
+                    <Style.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="Gray" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="True">
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Label.Style>
         </Label>
-        <Slider x:Name="sliderCameraSpeed" HorizontalAlignment="Left" Margin="292,130,0,0" VerticalAlignment="Top" Width="194" Maximum="100" TickFrequency="5" IsSnapToTickEnabled="True"/>
+        <Slider x:Name="sliderCameraSpeed" HorizontalAlignment="Left" Margin="292,164,0,0" VerticalAlignment="Top" Width="194" Maximum="100" TickFrequency="5" IsSnapToTickEnabled="True"/>
         <GroupBox x:Name="groupBoxFullscreen" Header="Fullscreen mode" HorizontalAlignment="Left" Margin="10,173,0,0" VerticalAlignment="Top" Height="104" Width="213"/>
         <RadioButton x:Name="radioButtonFullscreenModeOriginal" Content="Original" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" FontFamily="Verdana" FontSize="13" Margin="24,210,0,0">
             <RadioButton.ToolTip>
-                <TextBlock>Fullscreen original = géré par le jeu</TextBlock>
+                <TextBlock>Fullscreen original = géré par le jeu
+                    <LineBreak /> - pose des problèmes lorsque on passe hors du jeu (alt+tab)
+                    <LineBreak /> - inadapté au multi-écran
+                </TextBlock>
             </RadioButton.ToolTip>
         </RadioButton>
         <RadioButton x:Name="radioButtonFullscreenModeGregware" Content="Gregware" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" FontFamily="Verdana" FontSize="13" Margin="24,231,0,0" RenderTransformOrigin="0.512,2.067">
             <RadioButton.ToolTip>
-                <TextBlock>Fullscreen modifié :
+                <TextBlock>Fullscreen modifié par Gregware :
                     <LineBreak /> - résoud les problèmes de stabilité avec alt+tab
                     <LineBreak /> - apporte la compatibilité multi-écrans
-                    <LineBreak /> - peut diminuer les performances sur les petites config
                 </TextBlock>
             </RadioButton.ToolTip>
         </RadioButton>
-        <GroupBox x:Name="groupBoxMisc" Header="Défilement" HorizontalAlignment="Left" Margin="277,173,0,0" VerticalAlignment="Top" Height="70" Width="213"/>
-        <CheckBox x:Name="checkBoxMiscScrollWasd" HorizontalAlignment="Left" Margin="292,265,0,0" VerticalAlignment="Top"
+        <RadioButton x:Name="radioButtonFullscreenModeGentool" Content="Gentool" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Verdana" FontSize="13" Margin="24,252,0,0" RenderTransformOrigin="0.512,2.067" IsEnabled="True">
+            <RadioButton.ToolTip>
+                <TextBlock>Fullscreen modifié par Gentool :
+                    <LineBreak /> - résoud les problèmes de stabilité avec alt+tab
+                    <LineBreak /> - apporte la compatibilité multi-écrans
+                    <LineBreak /> - résoud le bug de la vitesse des éléments de décors
+                    <LineBreak /> - updates intempestives pénibles
+                    <LineBreak /> - incompatible avec certains mods
+                </TextBlock>
+            </RadioButton.ToolTip>
+            <RadioButton.Style>
+                <Style TargetType="RadioButton">
+                    <Style.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="Gray" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="True">
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </RadioButton.Style>
+        </RadioButton>
+        <GroupBox x:Name="groupBoxOther" Header="Misc" HorizontalAlignment="Left" Margin="10,284,0,0" VerticalAlignment="Top" Height="65" Width="213"/>
+        <CheckBox x:Name="checkBoxOther4g" HorizontalAlignment="Left" Margin="24,319,0,0" VerticalAlignment="Top" FontFamily="Verdana" FontSize="11" x:FieldModifier="public">
+            <TextBlock Text="Patch 4G" Margin="0,0,0,0" FontFamily="Verdana" FontSize="13" />
+            <CheckBox.ToolTip>
+                <TextBlock>EXPERIMENTAL
+                <LineBreak />Patch l'exécutable x86 pour qu'il puisse adresser
+                <LineBreak />4gb de RAM au lieu de 2gb sur les systèmes x64,    
+                <LineBreak />dans l'espoir de limiter les crashs.  
+                <LineBreak />Effet secondaire connu : désactive l'animation du menu.
+                <LineBreak />Incompatible avec Gentool.
+                </TextBlock>
+            </CheckBox.ToolTip>
+            <CheckBox.Style>
+                <Style TargetType="CheckBox">
+                    <Style.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="Gray" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="True">
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </CheckBox.Style>
+        </CheckBox>
+        <GroupBox x:Name="groupBoxMisc" Header="Défilement" HorizontalAlignment="Left" Margin="277,207,0,0" VerticalAlignment="Top" Height="70" Width="213"/>
+        <CheckBox x:Name="checkBoxMiscScrollWasd" HorizontalAlignment="Left" Margin="290,299,0,0" VerticalAlignment="Top"
                FontFamily="Verdana" FontSize="11" x:FieldModifier="public" >
             <TextBlock Text="Activer scroll clavier" Margin="0,0,0,0" Foreground="White" FontFamily="Verdana" FontSize="13" />
             <CheckBox.ToolTip>
                 <TextBlock>Permet de scroller la map avec les touches du clavier (W, A, S, D)
                     <LineBreak /> - désactive les fonctions originales de ces touches dans le jeu
+                    <LineBreak /> - y compris dans les menus, on ne peut plus isncrire des noms avec ces lettres
                 </TextBlock>
             </CheckBox.ToolTip>
         </CheckBox>
-        <Label x:Name="labelScrollFactor" Content="Vitesse du scroll (20%)" HorizontalAlignment="Left" Margin="287,204,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Verdana" FontSize="13">
+        <Label x:Name="labelScrollFactor" Content="Vitesse du scroll (20%)" HorizontalAlignment="Left" Margin="287,238,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Verdana" FontSize="13">
             <Label.ToolTip>
                 <TextBlock>Valeur par défaut : 20%</TextBlock>
             </Label.ToolTip>
         </Label>
-        <Slider x:Name="sliderScrollFactor" HorizontalAlignment="Left" Margin="292,231,0,0" VerticalAlignment="Top" Width="194" Minimum="10" Maximum="145" TickFrequency="1" IsSnapToTickEnabled="True"/>
+        <Slider x:Name="sliderScrollFactor" HorizontalAlignment="Left" Margin="292,265,0,0" VerticalAlignment="Top" Width="194" Minimum="10" Maximum="145" TickFrequency="1" IsSnapToTickEnabled="True"/>
         <Button x:Name="buttonOK" Content="OK" Margin="0,0,126,10" Width="99" Height="37" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Verdana" FontSize="14" Click="buttonOK_Click"/>
         <Button x:Name="buttonCancel" Content="Annuler" Margin="0,0,10,10" Width="99" Height="37" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Verdana" FontSize="14" Click="buttonCancel_Click" />
     </Grid>
