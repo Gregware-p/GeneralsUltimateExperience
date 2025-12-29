@@ -1,13 +1,74 @@
 ﻿<Application x:Class="GeneralsUltimateExperience.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary 
-                Source="pack://application:,,,/Selen.Wpf.SystemStyles;component/Styles.xaml"/>
+
+                <!-- MahApps resources -->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Dark.Steel.xaml" />
+
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- ============================= -->
+            <!-- Base color (single source)   -->
+            <!-- ============================= -->
+            <SolidColorBrush x:Key="BaseDarkGrayBrush" Color="#FF2D2D30"/>
+
+            <!-- ============================= -->
+            <!-- BUTTONS (exact keys used)    -->
+            <!-- ============================= -->
+            <SolidColorBrush x:Key="MahApps.Brushes.Button.Border"
+                 Color="{Binding Color, Source={StaticResource BaseDarkGrayBrush}}"/>
+
+            <!--<SolidColorBrush x:Key="MahApps.Brushes.Button.MouseOver.Border"
+                 Color="#FF3A3A3F"/>-->
+
+            <SolidColorBrush x:Key="MahApps.Brushes.Button.Pressed.Border"
+                 Color="#FF45454A"/>
+
+            <SolidColorBrush x:Key="MahApps.Brushes.Button.Disabled.Border"
+                 Color="#FF252528"/>
+
+            <!-- ============================= -->
+            <!-- COMBOBOX / INPUT (TextBox)   -->
+            <!-- ============================= -->
+            <SolidColorBrush x:Key="MahApps.Brushes.TextBox.Border"
+                 Color="{Binding Color, Source={StaticResource BaseDarkGrayBrush}}"/>
+
+            <SolidColorBrush x:Key="MahApps.Brushes.TextBox.MouseOver.Border"
+                 Color="#FF3A3A3F"/>
+
+            <SolidColorBrush x:Key="MahApps.Brushes.TextBox.Focus.Border"
+                 Color="#FF5A5A60"/>
+
+            <SolidColorBrush x:Key="MahApps.Brushes.TextBox.Disabled.Border"
+                 Color="#FF252528"/>
+
+
+
+
+
+
+
+            <Style x:Key="MainMetroWindowStyle" TargetType="{x:Type Controls:MetroWindow}" BasedOn="{StaticResource {x:Type Controls:MetroWindow}}">
+                <Setter Property="WindowTitleBrush" Value="{StaticResource BaseDarkGrayBrush}" />
+                <Setter Property="NonActiveWindowTitleBrush" Value="{StaticResource BaseDarkGrayBrush}" />
+                <Setter Property="TitleForeground" Value="#FFCCCCCC" />
+
+                <Setter Property="WindowTitleBrush" Value="{StaticResource BaseDarkGrayBrush}" />
+                <Setter Property="NonActiveWindowTitleBrush" Value="{StaticResource BaseDarkGrayBrush}" />
+                <Setter Property="TitleForeground" Value="#FFCCCCCC" />
+
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="GlowBrush" Value="{x:Null}"/>
+                <Setter Property="ResizeBorderThickness" Value="6"/>
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

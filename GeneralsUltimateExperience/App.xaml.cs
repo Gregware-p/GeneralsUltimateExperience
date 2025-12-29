@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
-using Microsoft.Win32;
-using System.Diagnostics;
 
 namespace GeneralsUltimateExperience
 {
@@ -71,8 +71,6 @@ namespace GeneralsUltimateExperience
             application.InitializeComponentCustom();
             application.Run();
         }
-
-        
 
         public void InitializeComponentCustom()
         {

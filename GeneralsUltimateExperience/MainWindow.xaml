@@ -5,7 +5,7 @@
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:Uge="clr-namespace:GeneralsUltimateExperience.Controls"
         xmlns:effect="clr-namespace:GrayscaleEffect;assembly=GrayscaleEffect"
-        Title="Generals Ultimate Experience" Height="630" Width="800" Icon="icon.ico" Loaded="MetroWindow_Loaded" AllowsTransparency="True" MouseMove="MetroWindow_MouseMove" ResizeMode="CanMinimize" ContentRendered="MetroWindow_ContentRendered" TitleForeground="#cccccc">
+        Title="Generals Ultimate Experience" Height="630" Width="800" Icon="icon.ico" Loaded="MetroWindow_Loaded" AllowsTransparency="True" MouseMove="MetroWindow_MouseMove" ResizeMode="CanMinimize" ContentRendered="MetroWindow_ContentRendered" Style="{StaticResource MainMetroWindowStyle}">
     <Grid x:Name="grid">
         <Grid.Background>
             <ImageBrush ImageSource="/GeneralsUltimateExperience;component/Images/BackgroundLogo.png" TileMode="None" />
