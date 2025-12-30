@@ -25,14 +25,10 @@ namespace GeneralsUltimateExperience
         private const string IMAGE_BANNER_FILE_EXTENSION = "png";
         private const string IMAGE_BACKGROUND_RELATIVE_PATH = "Images\\Mods\\{0}\\Backgrounds";
         private const string IMAGE_BACKGROUND_FILE_EXTENSION = "bmp";
-        private const string GAMEDATA_FILE_RELATIVE_PATH = "Data\\INI\\GameData.ini";
-        private const string GAMEDATA_CUSTOM_FILE_RELATIVE_PATH = "CustomINI\\GameData.ini";
         private const int NB_OF_IO_RETRY = 10;
         private const int DELAY_BETWEEN_IO_RETRY_MS = 500;
         private const string MESSAGE_ACCESS_PROBLEM_1 = "Problème d'accès lors du déplacement d'un {0}. Réessayer ? Si le jeu est en cours d'exécution quittez-le.{1}{1}Source : {2}{1}Destination : {3}{1}{1}Attention si le programme ne parvient pas à copier/déplacer les fichiers il perdra ses références et ne fonctionnera plus correctement. Une réinstallation complète sera alors nécessaire :-( {1}{1}Détails : {4}";
         private const string MESSAGE_ACCESS_PROBLEM_2 = "Voulez-vous vraiment interrompre le déplacement ?{0}{0}Attention le programme perdra ses références et ne fonctionnera plus correctement !!! Une réinstallation complète sera nécessaire :-(";
-        private readonly List<string> GENTOOL_FILES = new List<string> { "d3d8.cfg", "d3d8.dlL", "GenToolUpdater.exe" };
-        private readonly List<string> PATCH4G_FILES = new List<string> { "game.dat", "generals.exe" };
         #endregion
 
         #region structs
@@ -81,13 +77,8 @@ namespace GeneralsUltimateExperience
         private string _pathToMod;
         private string _pathToGame;
         private string _pathToMapPacks;
-        private string _pathToGentool;
-        private string _pathToGameDataIni;
-        private string _pathToPatch4g;
         private TaskScheduler _uiScheduler;
         private ComboBox _comboboxMapPack;
-        private bool _isGentool;
-        private bool _isPatch4g;
         private Button _buttonLaunchGame;
         #endregion
 
@@ -102,13 +93,8 @@ namespace GeneralsUltimateExperience
             _pathToMod = string.Format("{0}\\Mods\\{1}", _pathToApplication, _gameName);
             _pathToGame = string.Format("{0}\\Games\\{1}", _pathToApplication, _gameName);
             _pathToMapPacks = string.Format("{0}\\MapPacks\\{1}", _pathToApplication, _gameName);
-            _pathToGentool = string.Format("{0}\\Gentool", _pathToApplication);
-            _pathToGameDataIni = string.Format("{0}\\Games\\{1}\\{2}", _pathToApplication, _gameName, GAMEDATA_FILE_RELATIVE_PATH);
-            _pathToPatch4g = string.Format("{0}\\Patch4g", _pathToApplication);
             _uiScheduler = uiScheduler;
             _comboboxMapPack = comboboxMapPack;
-            _isGentool = isGentool;
-            _isPatch4g = isPatch4g;
             _buttonLaunchGame = buttonLaunchGame;
 
             string xmlPath = string.Format("{0}\\{1}", _pathToApplication, XML_FILENAME);
@@ -248,48 +234,6 @@ namespace GeneralsUltimateExperience
             }
         }
 
-        public static void AllGamesRefresh4g(bool enabled)
-        {
-            foreach (ModFactory modFactory in _modFactories.Values)
-            {
-                modFactory.Activer4g(enabled);
-            }
-        }
-
-        public static void AllGamesRefreshCameraSettings()
-        {
-            foreach (ModFactory modFactory in _modFactories.Values)
-            {
-                modFactory.RefreshGameDataIniCameraSettings();
-            }
-        }
-
-        public static void AllGamesRefreshZoomLibre(bool enabled)
-        {
-            foreach (ModFactory modFactory in _modFactories.Values)
-            {
-                modFactory.RefreshZoomLibre(enabled);
-            }
-        }
-
-        public static void AllGamesRefreshFullscreenMode()
-        {
-            bool windowed = (int)Properties.Settings.Default["FullscreenMode"] == 1; // seulement pour mode Gregware
-            foreach (ModFactory modFactory in _modFactories.Values)
-            {
-                modFactory.SetFullscreenModeInGameDataIni(windowed);
-            }
-        }
-
-        public static void AllGamesRefreshGentool()
-        {
-            bool enabled = (int)Properties.Settings.Default["FullscreenMode"] == 2;
-            foreach (ModFactory modFactory in _modFactories.Values)
-            {
-                modFactory.ActiverGentool(enabled);
-            }
-        }
-
         public static string GetGameExecutable(string gameName)
         {
             return _modFactories[gameName].GameExecutable;
@@ -358,52 +302,6 @@ namespace GeneralsUltimateExperience
 
             // Réactiver la form et changer le curseur
             Mouse.OverrideCursor = null;
-        }
-
-        public void ActiverGentool(bool enabled)
-        {
-            _isGentool = enabled;
-            if (_isGentool)
-            {
-                foreach (string filename in GENTOOL_FILES)
-                {
-                    File.Copy(string.Format("{0}\\{1}", _pathToGentool, filename), string.Format("{0}\\{1}", _pathToGame, filename), true);
-                }
-            }
-            else
-            {
-                foreach (string filename in GENTOOL_FILES)
-                {
-                    string path = string.Format("{0}\\{1}", _pathToGame, filename);
-                    if (File.Exists(path)) File.Delete(path);
-                }
-            }
-        }
-        
-        public void Activer4g(bool enabled)
-        {
-            _isPatch4g = enabled;
-            if (_isPatch4g)
-            {
-                foreach (string filename in PATCH4G_FILES)
-                {
-                    File.Copy(string.Format("{0}\\{1}\\patch\\{2}", _pathToPatch4g, _gameName, filename), string.Format("{0}\\{1}", _pathToGame, filename), true);
-                }
-            }
-            else
-            {
-                foreach (string filename in PATCH4G_FILES)
-                {
-                    File.Copy(string.Format("{0}\\{1}\\original\\{2}", _pathToPatch4g, _gameName, filename), string.Format("{0}\\{1}", _pathToGame, filename), true);
-                }
-            }
-        }
-
-        public void RefreshZoomLibre(bool enabled)
-        {
-            RefreshGameDataIniZoomForce(CurrentMod, enabled);
-            Properties.Settings.Default["CurrentForceZoom"] = enabled;
-            Properties.Settings.Default.Save();
         }
 
         public void RefreshControls(bool fromChangeTab = false)
@@ -484,60 +382,6 @@ namespace GeneralsUltimateExperience
             ComboBoxItem itemModMaps = (ComboBoxItem)_comboboxMapPack.Items[1];
             if (hasMaps) itemModMaps.Visibility = Visibility.Visible;
             else itemModMaps.Visibility = Visibility.Collapsed;
-        }
-
-        private void RefreshGameDataIni(string modId)
-        {
-            // Écraser
-            File.Copy(GetModCustomGameDataIni(modId), _pathToGameDataIni, true);
-
-            // Zoom forcé
-            RefreshGameDataIniZoomForce(modId, IsForceZoom, true);
-
-            // Mode fullscreen
-            RefreshGameDataIniFullscreenMode(modId);
-        }
-
-        public void RefreshGameDataIniCameraSettings()
-        {
-            if ((bool)Properties.Settings.Default["CurrentForceZoom"])
-            {
-                SetCameraSettingsInGameDataIni();
-            }
-        }        
-
-        private void RefreshGameDataIniZoomForce(string modId, bool enabled, bool onlyIfEnabled = false)
-        {
-            if (enabled)
-            {
-                // * Activer le zoom forcé *
-                SetCameraSettingsInGameDataIni();
-            }
-            else if (!onlyIfEnabled)
-            {
-                // * Désactiver le zoom forcé *
-                IniHelper.SetGameDataIniZoomValuesFromOtherGameDataIni(GetModCustomGameDataIni(modId), _pathToGameDataIni);
-            }
-        }
-
-        private void RefreshGameDataIniFullscreenMode(string modId)
-        {
-            bool enabled = (int)Properties.Settings.Default["FullscreenMode"] == 1;
-            SetFullscreenModeInGameDataIni(enabled);
-        }
-
-        private void SetCameraSettingsInGameDataIni()
-        {
-            // * Activer le zoom forcé *
-            int maxCameraHeight = (int)Properties.Settings.Default["ZoomMaxCameraHeight"];
-            double cameraSpeed = (double)Properties.Settings.Default["ZoomCameraAdjustSpeed"];
-            bool drawEntireTerrain = (bool)Properties.Settings.Default["ZoomDrawEntireTerrain"];
-            IniHelper.SetGameDataIniZoomValues(_pathToGameDataIni, maxCameraHeight, cameraSpeed, drawEntireTerrain);
-        }
-
-        public void SetFullscreenModeInGameDataIni(bool windowed)
-        {
-            IniHelper.SetGameDataIniWindowed(_pathToGameDataIni, windowed);
         }
 
         private static DoubleAnimation GetAnimationActivation(double target)
@@ -671,11 +515,6 @@ namespace GeneralsUltimateExperience
             // Remettre les fichiers et dossiers du mod à leur place
             foreach (string filename in _definitions[CurrentMod].Contenu.Mod.Files)
             {
-                if ((_isGentool && GENTOOL_FILES.Contains(filename, StringComparer.OrdinalIgnoreCase))
-                    || (_isPatch4g && PATCH4G_FILES.Contains(filename, StringComparer.OrdinalIgnoreCase)))
-                {
-                    continue;
-                }
                 MoveFile(GetGameFilePath(filename), GetModFilePath(CurrentMod, filename));
             }
             foreach (string foldername in _definitions[CurrentMod].Contenu.Mod.Folders)
@@ -712,13 +551,6 @@ namespace GeneralsUltimateExperience
                 // Mettre le fichiers et dossiers du mod
                 foreach (string filename in _definitions[modId].Contenu.Mod.Files)
                 {
-                    if ((_isGentool && GENTOOL_FILES.Contains(filename, StringComparer.OrdinalIgnoreCase))
-                    || (_isPatch4g && PATCH4G_FILES.Contains(filename, StringComparer.OrdinalIgnoreCase)))
-                    {
-                        // Désactiver le boutton launch
-                        res = false;
-                        continue;
-                    }
                     MoveFile(GetModFilePath(modId, filename), GetGameFilePath(filename));
                 }
                 foreach (string foldername in _definitions[modId].Contenu.Mod.Folders)
@@ -726,9 +558,6 @@ namespace GeneralsUltimateExperience
                     MoveFolder(GetModFolderPath(modId, foldername), GetGameFolderPath(foldername));
                 }
             }
-
-            // GameData.ini
-            RefreshGameDataIni(modId); // rétablir paramètres
 
             // Sortir avec le paramètre da'ctivation
             return res;
@@ -952,11 +781,6 @@ namespace GeneralsUltimateExperience
         private string GetModMapsFolderPath(string modId, string mapsFolderName)
         {
             return string.Format("{0}\\{1}\\UserMaps\\{2}", _pathToMod, modId, mapsFolderName);
-        }
-
-        private string GetModCustomGameDataIni(string modId)
-        {
-            return string.Format("{0}\\{1}\\{2}", _pathToMod, modId, GAMEDATA_CUSTOM_FILE_RELATIVE_PATH);
         }
 
         private string GetMapPackFolderPath(string mapPackName, string mapsFolderName)

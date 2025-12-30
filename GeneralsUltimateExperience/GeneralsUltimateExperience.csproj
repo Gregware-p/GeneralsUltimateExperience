@@ -111,14 +111,11 @@
     <Compile Include="CustomMessageBoxWindow.xaml.cs">
       <DependentUpon>CustomMessageBoxWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Fullscreen\DisplayManager.cs" />
-    <Compile Include="Fullscreen\GregwareCustomizations.cs" />
     <Compile Include="IniHelper.cs" />
     <Compile Include="ModFactory.cs" />
-    <Compile Include="Settings.xaml.cs">
-      <DependentUpon>Settings.xaml</DependentUpon>
+    <Compile Include="Resolution.xaml.cs">
+      <DependentUpon>Resolution.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Fullscreen\SafeNativeMethods.cs" />
     <Compile Include="SelectorAttachedProperties.cs" />
     <Compile Include="SerialNumbers.xaml.cs">
       <DependentUpon>SerialNumbers.xaml</DependentUpon>
@@ -148,7 +145,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Settings.xaml">
+    <Page Include="Resolution.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

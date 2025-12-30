@@ -20,7 +20,7 @@
                     <MenuItem Header="Nettoyer les maps" Click="settingsCleanMaps_Click" />
                     <MenuItem Header="Nettoyer Options.ini" Click="settingsCleanIni_Click" />
                     <MenuItem Header="Numéros de série" Click="settingsChangeSerial_Click" />
-                    <MenuItem Header="Paramètres" Click="settingsResolution_Click" />
+                    <MenuItem Header="Résolutions" Click="settingsResolution_Click" />
                     <MenuItem Header="À propos..." Click="settingsAbout_Click" />
                 </ContextMenu>
             </Button.ContextMenu>

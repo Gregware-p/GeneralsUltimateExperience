@@ -14,7 +14,6 @@ using System.Windows.Media.Animation;
 using System.Collections.Generic;
 using Microsoft.Win32;
 using MahApps.Metro.Controls;
-using GeneralsUltimateExperience.Fullscreen;
 
 namespace GeneralsUltimateExperience
 {
@@ -65,7 +64,6 @@ namespace GeneralsUltimateExperience
         private Point _originalMousePosition;
         private TabStateEnum _tabState = TabStateEnum.First;
         private bool _imageDeFond1 = true;
-        private GregwareCustomizations _fullScreenGregware = null;
         private static int _gameProcessId = -1;
         public bool IsStarted = false;
         #endregion
@@ -304,7 +302,7 @@ namespace GeneralsUltimateExperience
         private void settingsResolution_Click(object sender, RoutedEventArgs e)
         {
             ModFactory.AllGamesBackToOriginal();
-            new Settings(_pathToOptionIniGenerals, _pathToOptionIniHeureH) { Owner = this }.ShowDialog();
+            new Resolutions(_pathToOptionIniGenerals, _pathToOptionIniHeureH) { Owner = this }.ShowDialog();
         }
 
         private void settingsCleanIni_Click(object sender, RoutedEventArgs e)
@@ -456,9 +454,6 @@ namespace GeneralsUltimateExperience
             // Réappliquer les sélection après update
             if((bool)Properties.Settings.Default["JustUpdated"])
             {
-                ModFactory.AllGamesRefreshCameraSettings();
-                ModFactory.AllGamesRefreshFullscreenMode();
-                ModFactory.AllGamesRefreshGentool();
                 Properties.Settings.Default["JustUpdated"] = false;
                 Properties.Settings.Default.Save();
             }
@@ -536,45 +531,6 @@ namespace GeneralsUltimateExperience
                 }
             }
         }
-
-        //protected override void OnKeyDown(KeyEventArgs e)
-        //{
-        //    if (Properties.Settings.Default.ChangingHeureHMod || canvasLoading.Visibility == Visibility.Visible) return;
-
-        //    List<string> keys = HeureHOrderedDefinitions.Keys.ToList();
-        //    int index = keys.IndexOf(CurrentHeureHMod);
-
-        //    switch (e.Key)
-        //    {
-        //        case Key.Up:
-        //            // Get previous enum
-        //            index--;
-        //            if (index < 0) index = 0;
-        //            string previousModId = keys[index];
-
-        //            // Activate corresponding button
-        //            ButtonHeureHChangeMod_Click(GetButton(previousModId), new RoutedEventArgs());
-
-        //            return;
-
-        //        case Key.Down:
-        //            // Get next enum
-        //            index++;
-        //            if (index > keys.Count - 1) index = keys.Count - 1;
-        //            string nextModId = keys[index];
-
-        //            // Activate corresponding button
-        //            ButtonHeureHChangeMod_Click(GetButton(nextModId), new RoutedEventArgs());
-
-        //            return;
-
-        //        case Key.Enter:
-        //            buttonLaunchGame_Click(buttonLaunchGame, new RoutedEventArgs());
-        //            return;
-        //    }
-
-        //    base.OnKeyDown(e);
-        //}
         #endregion
 
         #region Helpers
@@ -601,68 +557,17 @@ namespace GeneralsUltimateExperience
             }).ContinueWith(antecedent =>
             {
                 DesactiverWindow();
-            }, _uiScheduler).ContinueWith(antecedent2 =>
-            {
-                ActiverGregwareCustomizations();
-                while (IsGameRunning()) Thread.Sleep(1000);
-            }).ContinueWith(antecedent3 =>
+            }, _uiScheduler).ContinueWith(antecedent3 =>
             {
                 ActiverWindow();
             }, _uiScheduler).ContinueWith(antecedent4 =>
             {
-                _fullScreenGregware.Desactiver();
-                _fullScreenGregware = null;
                 MonitorGameRunning();
             });
         }
 
-        private void ActiverGregwareCustomizations()
-        {
-            // Initialisation
-            bool isFullscreenGregware = (int)Properties.Settings.Default["FullscreenMode"] == 1;
-            bool isScrollGregware = (bool)Properties.Settings.Default["ScrollGregware"];
-            bool isGentool = (int)Properties.Settings.Default["FullscreenMode"] == 2;
-            int resolutionX = 0;
-            int resolutionY = 0;
-
-            // Validité
-            if (!isFullscreenGregware && !isScrollGregware) return;
-
-            // Trouver la résolution actuelle
-            if (isFullscreenGregware)
-            {
-                string pathToOptionIni;
-                if (_currentGameName.Equals("Generals", StringComparison.OrdinalIgnoreCase)) pathToOptionIni = _pathToOptionIniGenerals;
-                else if (_currentGameName.Equals("HeureH", StringComparison.OrdinalIgnoreCase)) pathToOptionIni = _pathToOptionIniHeureH;
-                else throw new Exception(string.Format("Unknown game name {0}", _currentGameName));
-                IniHelper.OptionIni optionIniResolution = IniHelper.GetOptionIni(pathToOptionIni);
-                resolutionX = optionIniResolution.ResolutionX;
-                resolutionY = optionIniResolution.ResolutionY;
-            }
-
-            // Activer
-            _fullScreenGregware = new GregwareCustomizations(isFullscreenGregware, isScrollGregware, isGentool, resolutionX, resolutionY, _uiScheduler);
-            _fullScreenGregware.Activer(_gameProcessId);
-        }
-
-        private void BlockIfGameRunning()
-        {
-            if (IsGameRunning())
-            {
-                Task.Factory.StartNew(() => { DesactiverWindow(); }, CancellationToken.None, TaskCreationOptions.None, _uiScheduler);
-                Task.Factory.StartNew(() =>
-                {
-                    while (IsGameRunning()) Thread.Sleep(1000);
-                }).ContinueWith(antecedent =>
-                {
-                    ActiverWindow();
-                }, _uiScheduler);
-            }
-        }
-
         public static bool IsGameRunning()
         {
-            //return Process.GetProcessesByName("game.dat").FirstOrDefault() != default(Process);
             return Process.GetProcesses().Any(p => p.Id == _gameProcessId);
         }
 
@@ -778,36 +683,38 @@ namespace GeneralsUltimateExperience
             }
 
             // écrire le fichier INI
-            sw.WriteLine("AntiAliasing = 1");
-            sw.WriteLine("BuildingOcclusion = yes");
-            sw.WriteLine("DynamicLOD = no");
-            sw.WriteLine("ExtraAnimations = yes");
+            sw.WriteLine("AntiAliasing = 14");
+            sw.WriteLine("BuildingOcclusion = no");
+            sw.WriteLine("CampaignDifficulty = 2");
+            sw.WriteLine("DrawScrollAnchor = ");
+            sw.WriteLine("DynamicLOD = yes");
+            sw.WriteLine("ExtraAnimations = no");
             sw.WriteLine("GameSpyIPAddress = 0.0.0.0");
             sw.WriteLine("Gamma = 50");
-            sw.WriteLine("HeatEffects = yes");
+            sw.WriteLine("HeatEffects = no");
             sw.WriteLine("IPAddress = 0.0.0.0");
-            sw.WriteLine("IdealStaticGameLOD = High");
-            sw.WriteLine("LanguageFilter = true");
-            sw.WriteLine("MaxParticleCount = 5000");
-            sw.WriteLine("MusicVolume = 50");
+            sw.WriteLine("IdealStaticGameLOD = Low");
+            sw.WriteLine("LanguageFilter = false");
+            sw.WriteLine("MaxParticleCount = 1000");
+            sw.WriteLine("MoveScrollAnchor = ");
+            sw.WriteLine("MusicVolume = 35");
             sw.WriteLine(string.Format("Resolution = {0} {1}", width, height));
-            sw.WriteLine("Retaliation = yes");
-            sw.WriteLine("SFX3DVolume = 66");
-            sw.WriteLine("SFXVolume = 60");
-            sw.WriteLine("SawTOS = yes");
+            sw.WriteLine("Retaliation = no");
+            sw.WriteLine("SFX3DVolume = 47");
+            sw.WriteLine("SFXVolume = 42");
             sw.WriteLine("ScrollFactor = 30");
             sw.WriteLine("SendDelay = no");
-            sw.WriteLine("ShowSoftWaterEdge = yes");
-            sw.WriteLine("ShowTrees = yes");
+            sw.WriteLine("ShowSoftWaterEdge = no");
+            sw.WriteLine("ShowTrees = no");
             sw.WriteLine("StaticGameLOD = Custom");
-            sw.WriteLine("TextureReduction = 0");
+            sw.WriteLine("TextureReduction = 2");
             sw.WriteLine("UseAlternateMouse = no");
-            sw.WriteLine("UseCloudMap = yes");
-            sw.WriteLine("UseDoubleClickAttackMove = no");
-            sw.WriteLine("UseLightMap = yes");
+            sw.WriteLine("UseCloudMap = no");
+            sw.WriteLine("UseDoubleClickAttackMove = yes");
+            sw.WriteLine("UseLightMap = no");
             sw.WriteLine("UseShadowDecals = yes");
             sw.WriteLine("UseShadowVolumes = no");
-            sw.WriteLine("VoiceVolume = 60");
+            sw.WriteLine("VoiceVolume = 52");
             sw.Close();
         }
         #endregion

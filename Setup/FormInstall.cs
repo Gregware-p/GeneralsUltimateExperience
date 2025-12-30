@@ -356,28 +356,28 @@ namespace Installer
 
                         // Ajouter les dossiers dans documents et donner suffisamment de droits
                         string myDocumentPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                        string generalsUserFoldePath = string.Format("{0}\\{1}", myDocumentPath, "Command and Conquer Generals Data");
-                        string zeroHoursUserFoldePath = string.Format("{0}\\{1}", myDocumentPath, "Command & Conquer Generals - Heure H Data");
-                        CreateFolderAllRight(generalsUserFoldePath);
-                        CreateFolderAllRight(zeroHoursUserFoldePath);
-                        CreateFolderAllRight(generalsUserFoldePath + "\\MapPreviews");
-                        CreateFolderAllRight(zeroHoursUserFoldePath + "\\MapPreviews");
-                        CreateFolderAllRight(generalsUserFoldePath + "\\Maps");
-                        CreateFolderAllRight(zeroHoursUserFoldePath + "\\Maps");
-                        CreateFolderAllRight(generalsUserFoldePath + "\\Replays");
-                        CreateFolderAllRight(zeroHoursUserFoldePath + "\\Replays");
-                        CreateFolderAllRight(generalsUserFoldePath + "\\Save");
-                        CreateFolderAllRight(zeroHoursUserFoldePath + "\\Save");
+                        string generalsUserFolderPath = string.Format("{0}\\{1}", myDocumentPath, "Command and Conquer Generals Data");
+                        string zeroHoursUserFolderPath = string.Format("{0}\\{1}", myDocumentPath, "Command & Conquer Generals - Heure H Data");
+                        CreateFolderAllRight(generalsUserFolderPath);
+                        CreateFolderAllRight(zeroHoursUserFolderPath);
+                        CreateFolderAllRight(generalsUserFolderPath + "\\MapPreviews");
+                        CreateFolderAllRight(zeroHoursUserFolderPath + "\\MapPreviews");
+                        CreateFolderAllRight(generalsUserFolderPath + "\\Maps");
+                        CreateFolderAllRight(zeroHoursUserFolderPath + "\\Maps");
+                        CreateFolderAllRight(generalsUserFolderPath + "\\Replays");
+                        CreateFolderAllRight(zeroHoursUserFolderPath + "\\Replays");
+                        CreateFolderAllRight(generalsUserFolderPath + "\\Save");
+                        CreateFolderAllRight(zeroHoursUserFolderPath + "\\Save");
 
                         // Ajouter l'option.ini
-                        WriteIniFile(File.CreateText(generalsUserFoldePath + "\\Options.ini"));
-                        WriteIniFile(File.CreateText(zeroHoursUserFoldePath + "\\Options.ini"));
+                        WriteIniFile(File.CreateText(generalsUserFolderPath + "\\Options.ini"));
+                        WriteIniFile(File.CreateText(zeroHoursUserFolderPath + "\\Options.ini"));
 
                         // Ajouter le fichier replay en readonly pour éviter les problèmes de lag (http://www.cnclabs.com/forums/cnc_postst15317_Horrible-Lag-on-Network-play.aspx)
-                        File.Create(generalsUserFoldePath + "\\Replays\\00000000.rep").Dispose();
-                        File.SetAttributes(generalsUserFoldePath + "\\Replays\\00000000.rep", FileAttributes.ReadOnly);
-                        File.Create(zeroHoursUserFoldePath + "\\Replays\\00000000.rep").Dispose();
-                        File.SetAttributes(zeroHoursUserFoldePath + "\\Replays\\00000000.rep", FileAttributes.ReadOnly);
+                        File.Create(generalsUserFolderPath + "\\Replays\\00000000.rep").Dispose();
+                        File.SetAttributes(generalsUserFolderPath + "\\Replays\\00000000.rep", FileAttributes.ReadOnly);
+                        File.Create(zeroHoursUserFolderPath + "\\Replays\\00000000.rep").Dispose();
+                        File.SetAttributes(zeroHoursUserFolderPath + "\\Replays\\00000000.rep", FileAttributes.ReadOnly);
 
                         // Ajouter un raccourci sur le bureau
                         string link = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + Path.DirectorySeparatorChar + "Generals Ultimate Experience.lnk";
@@ -589,36 +589,38 @@ namespace Installer
             }
 
             // écrire le fichier INI
-            sw.WriteLine("AntiAliasing = 1");
-            sw.WriteLine("BuildingOcclusion = yes");
-            sw.WriteLine("DynamicLOD = no");
-            sw.WriteLine("ExtraAnimations = yes");
+            sw.WriteLine("AntiAliasing = 14");
+            sw.WriteLine("BuildingOcclusion = no");
+            sw.WriteLine("CampaignDifficulty = 2");
+            sw.WriteLine("DrawScrollAnchor = ");
+            sw.WriteLine("DynamicLOD = yes");
+            sw.WriteLine("ExtraAnimations = no");
             sw.WriteLine("GameSpyIPAddress = 0.0.0.0");
             sw.WriteLine("Gamma = 50");
-            sw.WriteLine("HeatEffects = yes");
+            sw.WriteLine("HeatEffects = no");
             sw.WriteLine("IPAddress = 0.0.0.0");
-            sw.WriteLine("IdealStaticGameLOD = High");
-            sw.WriteLine("LanguageFilter = true");
-            sw.WriteLine("MaxParticleCount = 5000");
-            sw.WriteLine("MusicVolume = 50");
+            sw.WriteLine("IdealStaticGameLOD = Low");
+            sw.WriteLine("LanguageFilter = false");
+            sw.WriteLine("MaxParticleCount = 1000");
+            sw.WriteLine("MoveScrollAnchor = ");
+            sw.WriteLine("MusicVolume = 35");
             sw.WriteLine(string.Format("Resolution = {0} {1}", width, height));
-            sw.WriteLine("Retaliation = yes");
-            sw.WriteLine("SFX3DVolume = 66");
-            sw.WriteLine("SFXVolume = 60");
-            sw.WriteLine("SawTOS = yes");
+            sw.WriteLine("Retaliation = no");
+            sw.WriteLine("SFX3DVolume = 47");
+            sw.WriteLine("SFXVolume = 42");
             sw.WriteLine("ScrollFactor = 30");
             sw.WriteLine("SendDelay = no");
-            sw.WriteLine("ShowSoftWaterEdge = yes");
-            sw.WriteLine("ShowTrees = yes");
+            sw.WriteLine("ShowSoftWaterEdge = no");
+            sw.WriteLine("ShowTrees = no");
             sw.WriteLine("StaticGameLOD = Custom");
-            sw.WriteLine("TextureReduction = 0");
+            sw.WriteLine("TextureReduction = 2");
             sw.WriteLine("UseAlternateMouse = no");
-            sw.WriteLine("UseCloudMap = yes");
-            sw.WriteLine("UseDoubleClickAttackMove = no");
-            sw.WriteLine("UseLightMap = yes");
+            sw.WriteLine("UseCloudMap = no");
+            sw.WriteLine("UseDoubleClickAttackMove = yes");
+            sw.WriteLine("UseLightMap = no");
             sw.WriteLine("UseShadowDecals = yes");
             sw.WriteLine("UseShadowVolumes = no");
-            sw.WriteLine("VoiceVolume = 60");
+            sw.WriteLine("VoiceVolume = 52");
             sw.Close();
         }
 
