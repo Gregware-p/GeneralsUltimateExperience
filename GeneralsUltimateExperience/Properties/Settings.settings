@@ -20,28 +20,7 @@
     <Setting Name="CurrentHeureHMapPack" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="ZoomMaxCameraHeight" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1000</Value>
-    </Setting>
-    <Setting Name="ZoomCameraAdjustSpeed" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0.6</Value>
-    </Setting>
-    <Setting Name="ZoomDrawEntireTerrain" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
     <Setting Name="JustUpdated" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="ScrollGregware" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="FullscreenMode" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="CurrentForceZoom" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="Current4g" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="CurrentLaunchActivatedGenerals" Type="System.Boolean" Scope="User">

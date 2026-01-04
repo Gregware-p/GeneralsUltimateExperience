@@ -457,9 +457,11 @@ namespace GeneralsUltimateExperience
             Grid gridHeureH = new Grid { Name = "gridButtonsHeureH" };
             svHeureH.Content = gridHeureH;
 
-            TabItems = new List<TabItem>();
-            TabItems.Add(tabItemGenerals);
-            TabItems.Add(tabItemHeureH);
+            TabItems = new List<TabItem>
+            {
+                tabItemGenerals,
+                tabItemHeureH
+            };
 
             TabItemsCollectionView = new ListCollectionView(TabItems);
             buttonLaunchGame.Effect = new GrayscaleEffect.GrayscaleEffect();
@@ -474,8 +476,6 @@ namespace GeneralsUltimateExperience
                 new List<Grid> { gridGenerals, gridHeureH },
                 new List<double> { Convert.ToInt32(_currentGameName.Equals("Generals")), Convert.ToInt32(_currentGameName.Equals("HeureH")) },
                 new List<ComboBox> { comboBoxMapsGenerals, comboBoxMapsHeureH },
-                (int)Properties.Settings.Default["FullscreenMode"] == 2,
-                (bool)Properties.Settings.Default["Current4g"], 
                 buttonLaunchGame);
 
             // Evenements sur changement de tab

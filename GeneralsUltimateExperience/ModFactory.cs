@@ -83,7 +83,7 @@ namespace GeneralsUltimateExperience
         #endregion
 
         #region Constructor
-        public ModFactory(MainWindow window, string gameName, string pathToApplication, string pathToMaps, TaskScheduler uiScheduler, Grid panelButtons, double buttonOpacity, ComboBox comboboxMapPack, bool isGentool, bool isPatch4g, Button buttonLaunchGame)
+        public ModFactory(MainWindow window, string gameName, string pathToApplication, string pathToMaps, TaskScheduler uiScheduler, Grid panelButtons, double buttonOpacity, ComboBox comboboxMapPack, Button buttonLaunchGame)
         {
             _window = window;
             _gameName = gameName;
@@ -208,12 +208,12 @@ namespace GeneralsUltimateExperience
         #endregion
 
         #region Methods
-        public static void Init(MainWindow window, List<string> gameNames, List<string> pathToMaps, string pathToApplication, TaskScheduler uiScheduler, List<Grid> panelButtons, List<double> buttonOpacities, List<ComboBox> comboboxMapPacks, bool isGentool, bool isPAtch4g, Button buttonLaunchGame)
+        public static void Init(MainWindow window, List<string> gameNames, List<string> pathToMaps, string pathToApplication, TaskScheduler uiScheduler, List<Grid> panelButtons, List<double> buttonOpacities, List<ComboBox> comboboxMapPacks, Button buttonLaunchGame)
         {
             _modFactories = new Dictionary<string, ModFactory>();
             for (int i = 0; i < gameNames.Count; i++)
             {
-                _modFactories.Add(gameNames[i], new ModFactory(window, gameNames[i], pathToApplication, pathToMaps[i], uiScheduler, panelButtons[i], buttonOpacities[i], comboboxMapPacks[i], isGentool, isPAtch4g, buttonLaunchGame));
+                _modFactories.Add(gameNames[i], new ModFactory(window, gameNames[i], pathToApplication, pathToMaps[i], uiScheduler, panelButtons[i], buttonOpacities[i], comboboxMapPacks[i], buttonLaunchGame));
             }
         }
 
