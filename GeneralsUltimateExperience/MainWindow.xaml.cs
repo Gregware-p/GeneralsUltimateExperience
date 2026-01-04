@@ -553,12 +553,15 @@ namespace GeneralsUltimateExperience
         {
             Task.Factory.StartNew(() =>
             {
+                // On attend que le jeu soit lancé
                 while (!IsGameRunning()) Thread.Sleep(1000);
             }).ContinueWith(antecedent =>
             {
-                DesactiverWindow();
+                // On attend que le jeu soit fermé
+                while (IsGameRunning()) Thread.Sleep(1000);
             }, _uiScheduler).ContinueWith(antecedent3 =>
             {
+                // On réactive la fenêtre
                 ActiverWindow();
             }, _uiScheduler).ContinueWith(antecedent4 =>
             {
