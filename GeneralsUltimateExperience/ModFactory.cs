@@ -450,7 +450,7 @@ namespace GeneralsUltimateExperience
         private void ButtonChangeMod_Click(object sender, RoutedEventArgs e)
         {
             if ((bool)Properties.Settings.Default[string.Format("Changing{0}Mod", _gameName)] || _window.canvasLoading.Visibility == Visibility.Visible) return;
-            if (MainWindow.IsGameRunning()) return;
+            if (_window.IsGameRunning()) return;
 
             Button button = (Button)sender;
             string modId = button.Name.Substring(9 + _gameName.Length);

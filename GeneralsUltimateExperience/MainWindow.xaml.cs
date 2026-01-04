@@ -64,8 +64,7 @@ namespace GeneralsUltimateExperience
         private Point _originalMousePosition;
         private TabStateEnum _tabState = TabStateEnum.First;
         private bool _imageDeFond1 = true;
-        private static int _gameProcessId = -1;
-        private CancellationTokenSource _monitorCts;
+        private Process _gameProcess;
         public bool IsStarted = false;
         #endregion
 
@@ -297,7 +296,7 @@ namespace GeneralsUltimateExperience
 
         private void settingsChangeSerial_Click(object sender, RoutedEventArgs e)
         {
-            new SerialNumbers(_pathToExe, _uiScheduler) { Owner = this }.ShowDialog();
+            new SerialNumbers(this, _pathToExe, _uiScheduler) { Owner = this }.ShowDialog();
         }
 
         private void settingsResolution_Click(object sender, RoutedEventArgs e)
@@ -328,20 +327,53 @@ namespace GeneralsUltimateExperience
 
         private void buttonLaunchGame_Click(object sender, RoutedEventArgs e)
         {
-            if (Properties.Settings.Default.ChangingGeneralsMod || Properties.Settings.Default.ChangingHeureHMod || canvasLoading.Visibility == Visibility.Visible) return;
-            if (IsGameRunning()) return;
+            if (Properties.Settings.Default.ChangingGeneralsMod || 
+                Properties.Settings.Default.ChangingHeureHMod || 
+                canvasLoading.Visibility == Visibility.Visible) 
+                return;
+
+            if (_gameProcess is { HasExited: false })
+                return;
 
             // Désactiver la form
             DesactiverWindow();
 
             // Créer un thread pour éviter les problèmes UI
-            Task.Factory.StartNew(() =>
+            string gameExePath = ModFactory.GetGameExecutable(_currentGameName);
+
+            var p = new Process();
+            p.StartInfo = new ProcessStartInfo
             {
-                // Execute game
-                string gameExePath = ModFactory.GetGameExecutable(_currentGameName);
-                Process gameProcess = Process.Start(gameExePath);
-                _gameProcessId = gameProcess.Id;
-            });
+                FileName = gameExePath,
+                UseShellExecute = true
+            };
+
+            p.EnableRaisingEvents = true;
+            p.Exited += GameProcess_Exited;
+
+            if (!p.Start())
+            {
+                p.Exited -= GameProcess_Exited;
+                ActiverWindow();
+                return;
+            }
+
+            _gameProcess = p;
+        }
+
+        private void GameProcess_Exited(object sender, EventArgs e)
+        {
+            // retour UI
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                var p = (Process)sender;
+                p.Exited -= GameProcess_Exited;
+                p.Dispose();
+
+                _gameProcess = null;
+
+                ActiverWindow();
+            }));
         }
 
         private void Items_CurrentChanging(object sender, System.ComponentModel.CurrentChangingEventArgs e)
@@ -461,11 +493,6 @@ namespace GeneralsUltimateExperience
 
             // Démarrer l'affichage
             ModFactory.Refresh(_currentGameName);
-
-            // Démarrer le détecteur de lancement
-            _monitorCts?.Cancel();
-            _monitorCts = new CancellationTokenSource();
-            _ = MonitorGameRunningAsync(_monitorCts.Token);
         }
 
         private void ButtonLaunchGame_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -552,33 +579,9 @@ namespace GeneralsUltimateExperience
             Keyboard.Focus(this);
         }
 
-        private async Task MonitorGameRunningAsync(CancellationToken token)
+        public bool IsGameRunning()
         {
-            // Attendre le lancement
-            while (!IsGameRunning())
-            {
-                await Task.Delay(1000, token);
-            }
-
-            // Attendre la fermeture
-            while (IsGameRunning())
-            {
-                await Task.Delay(1000, token);
-            }
-
-            // Action UI
-            await Application.Current.Dispatcher.InvokeAsync(() =>
-            {
-                ActiverWindow();
-            });
-
-            // Reboucler
-            await MonitorGameRunningAsync(token);
-        }
-
-        public static bool IsGameRunning()
-        {
-            return Process.GetProcesses().Any(p => p.Id == _gameProcessId);
+            return _gameProcess != null && !_gameProcess.HasExited;
         }
 
         private void RefreshRemoteVersion()

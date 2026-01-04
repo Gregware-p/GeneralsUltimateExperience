@@ -1,10 +1,10 @@
-﻿using System;
-using System.Threading;
-using System.Windows;
+﻿using MahApps.Metro.Controls;
 using Microsoft.Win32;
-using MahApps.Metro.Controls;
+using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace GeneralsUltimateExperience
 {
@@ -19,11 +19,13 @@ namespace GeneralsUltimateExperience
         private string _originalZeroHoursKey;
         private readonly string _pathToExe;
         private readonly TaskScheduler _uiScheduler;
+        private MainWindow _window;
         Process _process;
 
-        public SerialNumbers(string pathToExe, TaskScheduler uiScheduler)
+        public SerialNumbers(MainWindow window, string pathToExe, TaskScheduler uiScheduler)
         {
             InitializeComponent();
+            _window = window;
             _pathToExe = pathToExe;
             _uiScheduler = uiScheduler;
         }
@@ -125,7 +127,7 @@ namespace GeneralsUltimateExperience
                 return;
             }
 
-            if (MainWindow.IsGameRunning())
+            if (_window.IsGameRunning())
             {
                 CustomMessageBox.Show(this, string.Format("Changement de numéro de série impossible : le jeu est en cours d'exécution.{0}{0}Quitte d'abord le jeu (si nécessaire via Gestionnaire des tâches => fin de tâche sur generals.exe et/ou game.dat)",
                         Environment.NewLine), "Changement de numéro de série", MessageBoxButton.OK, MessageBoxImage.Error);
