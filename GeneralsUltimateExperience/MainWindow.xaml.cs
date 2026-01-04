@@ -65,6 +65,7 @@ namespace GeneralsUltimateExperience
         private TabStateEnum _tabState = TabStateEnum.First;
         private bool _imageDeFond1 = true;
         private static int _gameProcessId = -1;
+        private CancellationTokenSource _monitorCts;
         public bool IsStarted = false;
         #endregion
 
@@ -462,7 +463,9 @@ namespace GeneralsUltimateExperience
             ModFactory.Refresh(_currentGameName);
 
             // Démarrer le détecteur de lancement
-            MonitorGameRunning();
+            _monitorCts?.Cancel();
+            _monitorCts = new CancellationTokenSource();
+            _ = MonitorGameRunningAsync(_monitorCts.Token);
         }
 
         private void ButtonLaunchGame_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -549,24 +552,28 @@ namespace GeneralsUltimateExperience
             Keyboard.Focus(this);
         }
 
-        private void MonitorGameRunning()
+        private async Task MonitorGameRunningAsync(CancellationToken token)
         {
-            Task.Factory.StartNew(() =>
+            // Attendre le lancement
+            while (!IsGameRunning())
             {
-                // On attend que le jeu soit lancé
-                while (!IsGameRunning()) Thread.Sleep(1000);
-            }).ContinueWith(antecedent =>
+                await Task.Delay(1000, token);
+            }
+
+            // Attendre la fermeture
+            while (IsGameRunning())
             {
-                // On attend que le jeu soit fermé
-                while (IsGameRunning()) Thread.Sleep(1000);
-            }, _uiScheduler).ContinueWith(antecedent3 =>
+                await Task.Delay(1000, token);
+            }
+
+            // Action UI
+            await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                // On réactive la fenêtre
                 ActiverWindow();
-            }, _uiScheduler).ContinueWith(antecedent4 =>
-            {
-                MonitorGameRunning();
             });
+
+            // Reboucler
+            await MonitorGameRunningAsync(token);
         }
 
         public static bool IsGameRunning()
@@ -686,7 +693,7 @@ namespace GeneralsUltimateExperience
             }
 
             // écrire le fichier INI
-            sw.WriteLine("AntiAliasing = 14");
+            sw.WriteLine("AntiAliasing = 0");
             sw.WriteLine("BuildingOcclusion = no");
             sw.WriteLine("CampaignDifficulty = 2");
             sw.WriteLine("DrawScrollAnchor = ");
@@ -698,26 +705,26 @@ namespace GeneralsUltimateExperience
             sw.WriteLine("IPAddress = 0.0.0.0");
             sw.WriteLine("IdealStaticGameLOD = Low");
             sw.WriteLine("LanguageFilter = false");
-            sw.WriteLine("MaxParticleCount = 1000");
+            sw.WriteLine("MaxParticleCount = 800");
             sw.WriteLine("MoveScrollAnchor = ");
             sw.WriteLine("MusicVolume = 35");
             sw.WriteLine(string.Format("Resolution = {0} {1}", width, height));
             sw.WriteLine("Retaliation = no");
-            sw.WriteLine("SFX3DVolume = 47");
-            sw.WriteLine("SFXVolume = 42");
+            sw.WriteLine("SFX3DVolume = 40");
+            sw.WriteLine("SFXVolume = 40");
             sw.WriteLine("ScrollFactor = 30");
             sw.WriteLine("SendDelay = no");
             sw.WriteLine("ShowSoftWaterEdge = no");
             sw.WriteLine("ShowTrees = no");
-            sw.WriteLine("StaticGameLOD = Custom");
-            sw.WriteLine("TextureReduction = 2");
+            sw.WriteLine("StaticGameLOD = Low");
+            sw.WriteLine("TextureReduction = 1");
             sw.WriteLine("UseAlternateMouse = no");
             sw.WriteLine("UseCloudMap = no");
             sw.WriteLine("UseDoubleClickAttackMove = yes");
             sw.WriteLine("UseLightMap = no");
             sw.WriteLine("UseShadowDecals = yes");
             sw.WriteLine("UseShadowVolumes = no");
-            sw.WriteLine("VoiceVolume = 52");
+            sw.WriteLine("VoiceVolume = 50");
             sw.Close();
         }
         #endregion

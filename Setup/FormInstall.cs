@@ -589,7 +589,7 @@ namespace Installer
             }
 
             // écrire le fichier INI
-            sw.WriteLine("AntiAliasing = 14");
+            sw.WriteLine("AntiAliasing = 0");
             sw.WriteLine("BuildingOcclusion = no");
             sw.WriteLine("CampaignDifficulty = 2");
             sw.WriteLine("DrawScrollAnchor = ");
@@ -601,26 +601,26 @@ namespace Installer
             sw.WriteLine("IPAddress = 0.0.0.0");
             sw.WriteLine("IdealStaticGameLOD = Low");
             sw.WriteLine("LanguageFilter = false");
-            sw.WriteLine("MaxParticleCount = 1000");
+            sw.WriteLine("MaxParticleCount = 800");
             sw.WriteLine("MoveScrollAnchor = ");
             sw.WriteLine("MusicVolume = 35");
             sw.WriteLine(string.Format("Resolution = {0} {1}", width, height));
             sw.WriteLine("Retaliation = no");
-            sw.WriteLine("SFX3DVolume = 47");
-            sw.WriteLine("SFXVolume = 42");
+            sw.WriteLine("SFX3DVolume = 40");
+            sw.WriteLine("SFXVolume = 40");
             sw.WriteLine("ScrollFactor = 30");
             sw.WriteLine("SendDelay = no");
             sw.WriteLine("ShowSoftWaterEdge = no");
             sw.WriteLine("ShowTrees = no");
-            sw.WriteLine("StaticGameLOD = Custom");
-            sw.WriteLine("TextureReduction = 2");
+            sw.WriteLine("StaticGameLOD = Low");
+            sw.WriteLine("TextureReduction = 1");
             sw.WriteLine("UseAlternateMouse = no");
             sw.WriteLine("UseCloudMap = no");
             sw.WriteLine("UseDoubleClickAttackMove = yes");
             sw.WriteLine("UseLightMap = no");
             sw.WriteLine("UseShadowDecals = yes");
             sw.WriteLine("UseShadowVolumes = no");
-            sw.WriteLine("VoiceVolume = 52");
+            sw.WriteLine("VoiceVolume = 50");
             sw.Close();
         }
 
