@@ -1,18 +1,20 @@
-﻿using System;
-using System.IO;
-using System.Net;
-using System.Linq;
-using System.Drawing;
-using System.Threading;
-using System.Reflection;
-using System.Diagnostics;
-using System.Windows.Forms;
-using System.Threading.Tasks;
-using System.ComponentModel;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
-using System.Security.Principal;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Reflection;
 using System.Security.AccessControl;
-using Microsoft.Win32;
+using System.Security.Principal;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+using Setup;
 
 namespace Installer
 {
@@ -297,7 +299,7 @@ namespace Installer
                         keySoftware.CreateSubKey("GeneralsUltimateExperience");
                         RegistryKey keyUge = keySoftware.OpenSubKey("GeneralsUltimateExperience", true);
                         keyUge.SetValue("InstallPath", _installPath);
-                        keyUge.SetValue("MajorVersion", 1);
+                        keyUge.SetValue("MajorVersion", 2);
                         keyUge.SetValue("MinorVersion", 0);
 
                         // Registre : Electronic Arts
@@ -610,12 +612,12 @@ namespace Installer
             sw.WriteLine("SFXVolume = 40");
             sw.WriteLine("ScrollFactor = 30");
             sw.WriteLine("SendDelay = no");
-            sw.WriteLine("ShowSoftWaterEdge = no");
+            sw.WriteLine("ShowSoftWaterEdge = yes");
             sw.WriteLine("ShowTrees = no");
             sw.WriteLine("StaticGameLOD = Low");
             sw.WriteLine("TextureReduction = 1");
             sw.WriteLine("UseAlternateMouse = no");
-            sw.WriteLine("UseCloudMap = no");
+            sw.WriteLine("UseCloudMap = yes");
             sw.WriteLine("UseDoubleClickAttackMove = yes");
             sw.WriteLine("UseLightMap = no");
             sw.WriteLine("UseShadowDecals = yes");
@@ -680,6 +682,27 @@ namespace Installer
             DirectorySecurity secUserFolder = Directory.GetAccessControl(path);
             secUserFolder.AddAccessRule(new FileSystemAccessRule(everyone, FileSystemRights.Modify | FileSystemRights.Synchronize, InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow));
             Directory.SetAccessControl(path, secUserFolder);
+        }
+
+        private void refreshCodeGenerals_Click(object sender, EventArgs e)
+        {
+            textBoxSerialGenerals.Text = CodeGenerator.GenerateNumeric();
+        }
+
+        private void refreshCodeHeureH_Click(object sender, EventArgs e)
+        {
+            textBoxSerialHeureH.Text = CodeGenerator.GenerateAlphaNumericUpper();
+        }
+
+        private void FormInstall_Load(object sender, EventArgs e)
+        {
+            textBoxSerialGenerals.Text = CodeGenerator.GenerateNumeric();
+            textBoxSerialHeureH.Text = CodeGenerator.GenerateAlphaNumericUpper();
+        }
+
+        private void FormInstall_Shown(object sender, EventArgs e)
+        {
+            buttonInstall.Focus();
         }
     }
 }

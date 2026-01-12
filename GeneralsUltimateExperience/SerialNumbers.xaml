@@ -3,16 +3,34 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
-        Title="Numéros de série" Height="245" Width="300" Icon="icon.ico" ResizeMode="NoResize" ShowInTaskbar="False" Loaded="Window_Loaded" TitleForeground="#cccccc" Closed="Window_Closed" WindowStartupLocation="CenterOwner">
+        Title="Numéros de série" Height="245" Width="336" Icon="icon.ico" ResizeMode="NoResize" ShowInTaskbar="False" Loaded="Window_Loaded" TitleForeground="#cccccc" Closed="Window_Closed" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.Background>
             <ImageBrush ImageSource="/GeneralsUltimateExperience;component/Images/BackSerial.png" TileMode="None" />
         </Grid.Background>
-        <TextBox x:Name="textBoxSerialGenerals" Margin="10,40,10,0" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Verdana" FontSize="13" Height="23" Padding="2" />
-        <TextBox x:Name="textBoxSerialHeureH" Margin="10,107,10,0" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Verdana" FontSize="13" Height="23" Padding="2" />
+        <TextBox x:Name="textBoxSerialGenerals" Margin="10,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Verdana" FontSize="13" Height="23" Padding="2" HorizontalAlignment="Left" Width="280" />
+        <TextBox x:Name="textBoxSerialHeureH" Margin="10,107,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Verdana" FontSize="13" Height="23" Padding="2" HorizontalAlignment="Left" Width="280" />
         <Label x:Name="labelSerialGenerals" Content="Generals" HorizontalAlignment="Left" Margin="10,14,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Verdana" FontSize="13" />
         <Label x:Name="labelSerialHeureH" Content="Heure H" HorizontalAlignment="Left" Margin="10,81,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Verdana" FontSize="13"/>
-        <Button x:Name="buttonOK" Content="OK" Margin="0,0,126,10" Width="99" Height="37" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Verdana" FontSize="14" Click="buttonOK_Click" />
+        <Button x:Name="buttonRefreshSerialGenerals" Margin="293,39,0,0" Width="24" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Click="buttonRefreshSerialGenerals_Click" BorderThickness="0" ToolTip="Générer un nouveau code">
+            <Button.Template>
+                <ControlTemplate>
+                    <Image x:Name="refreshSerialGenerals" Source="/GeneralsUltimateExperience;component/Images/refresh.png" />
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        <Button x:Name="buttonRefreshSerialHeureH" Margin="293,106,0,0" Width="24" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Click="buttonRefreshSerialHeureH_Click" BorderThickness="0" ToolTip="Générer un nouveau code">
+            <Button.Template>
+                <ControlTemplate>
+                    <Image x:Name="refreshSerialHeureH" Source="/GeneralsUltimateExperience;component/Images/refresh.png" />
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        <Button x:Name="buttonOK" Content="OK" Margin="0,0,126,10" Width="99" Height="37" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Verdana" FontSize="14" Click="buttonOK_Click" >
+            <Button.Background>
+                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>
+            </Button.Background>
+        </Button>
         <Button x:Name="buttonCancel" Content="Annuler" Margin="0,0,10,10" Width="99" Height="37" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Verdana" FontSize="14" Click="buttonCancel_Click" />
     </Grid>
 </Controls:MetroWindow>

@@ -717,12 +717,12 @@ namespace GeneralsUltimateExperience
             sw.WriteLine("SFXVolume = 40");
             sw.WriteLine("ScrollFactor = 30");
             sw.WriteLine("SendDelay = no");
-            sw.WriteLine("ShowSoftWaterEdge = no");
+            sw.WriteLine("ShowSoftWaterEdge = yes");
             sw.WriteLine("ShowTrees = no");
             sw.WriteLine("StaticGameLOD = Low");
             sw.WriteLine("TextureReduction = 1");
             sw.WriteLine("UseAlternateMouse = no");
-            sw.WriteLine("UseCloudMap = no");
+            sw.WriteLine("UseCloudMap = yes");
             sw.WriteLine("UseDoubleClickAttackMove = yes");
             sw.WriteLine("UseLightMap = no");
             sw.WriteLine("UseShadowDecals = yes");

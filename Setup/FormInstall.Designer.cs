@@ -41,6 +41,10 @@
             this.labelSerialGenerals = new System.Windows.Forms.Label();
             this.textBoxSerialHeureH = new System.Windows.Forms.TextBox();
             this.labelSerialHeureH = new System.Windows.Forms.Label();
+            this.refreshCodeGenerals = new System.Windows.Forms.PictureBox();
+            this.refreshCodeHeureH = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.refreshCodeGenerals)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.refreshCodeHeureH)).BeginInit();
             this.SuspendLayout();
             // 
             // labelDossierInatallation
@@ -83,9 +87,9 @@
             this.labelCopyright.ForeColor = System.Drawing.Color.White;
             this.labelCopyright.Location = new System.Drawing.Point(-1, 485);
             this.labelCopyright.Name = "labelCopyright";
-            this.labelCopyright.Size = new System.Drawing.Size(110, 13);
+            this.labelCopyright.Size = new System.Drawing.Size(134, 13);
             this.labelCopyright.TabIndex = 10;
-            this.labelCopyright.Text = "© 2016 Gregware";
+            this.labelCopyright.Text = "Powered by Gregware";
             // 
             // buttonInstall
             // 
@@ -104,7 +108,7 @@
             // 
             // buttonCancel
             // 
-            this.buttonCancel.BackColor = System.Drawing.SystemColors.Highlight;
+            this.buttonCancel.BackColor = System.Drawing.SystemColors.GrayText;
             this.buttonCancel.FlatAppearance.BorderSize = 0;
             this.buttonCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonCancel.Font = new System.Drawing.Font("Verdana", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -166,7 +170,7 @@
             this.textBoxSerialHeureH.BackColor = System.Drawing.Color.Black;
             this.textBoxSerialHeureH.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxSerialHeureH.ForeColor = System.Drawing.Color.White;
-            this.textBoxSerialHeureH.Location = new System.Drawing.Point(400, 246);
+            this.textBoxSerialHeureH.Location = new System.Drawing.Point(373, 246);
             this.textBoxSerialHeureH.Name = "textBoxSerialHeureH";
             this.textBoxSerialHeureH.Size = new System.Drawing.Size(292, 26);
             this.textBoxSerialHeureH.TabIndex = 4;
@@ -177,11 +181,39 @@
             this.labelSerialHeureH.BackColor = System.Drawing.Color.Transparent;
             this.labelSerialHeureH.Font = new System.Drawing.Font("Verdana", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelSerialHeureH.ForeColor = System.Drawing.Color.White;
-            this.labelSerialHeureH.Location = new System.Drawing.Point(397, 225);
+            this.labelSerialHeureH.Location = new System.Drawing.Point(370, 225);
             this.labelSerialHeureH.Name = "labelSerialHeureH";
             this.labelSerialHeureH.Size = new System.Drawing.Size(162, 18);
             this.labelSerialHeureH.TabIndex = 3;
             this.labelSerialHeureH.Text = "N° de série HeureH :";
+            // 
+            // refreshCodeGenerals
+            // 
+            this.refreshCodeGenerals.BackColor = System.Drawing.Color.Transparent;
+            this.refreshCodeGenerals.BackgroundImage = global::Setup.Properties.Resources.refresh;
+            this.refreshCodeGenerals.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.refreshCodeGenerals.Image = global::Setup.Properties.Resources.refresh;
+            this.refreshCodeGenerals.Location = new System.Drawing.Point(310, 246);
+            this.refreshCodeGenerals.Margin = new System.Windows.Forms.Padding(2);
+            this.refreshCodeGenerals.Name = "refreshCodeGenerals";
+            this.refreshCodeGenerals.Size = new System.Drawing.Size(24, 24);
+            this.refreshCodeGenerals.TabIndex = 14;
+            this.refreshCodeGenerals.TabStop = false;
+            this.refreshCodeGenerals.Click += new System.EventHandler(this.refreshCodeGenerals_Click);
+            // 
+            // refreshCodeHeureH
+            // 
+            this.refreshCodeHeureH.BackColor = System.Drawing.Color.Transparent;
+            this.refreshCodeHeureH.BackgroundImage = global::Setup.Properties.Resources.refresh;
+            this.refreshCodeHeureH.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.refreshCodeHeureH.Image = global::Setup.Properties.Resources.refresh;
+            this.refreshCodeHeureH.Location = new System.Drawing.Point(669, 246);
+            this.refreshCodeHeureH.Margin = new System.Windows.Forms.Padding(2);
+            this.refreshCodeHeureH.Name = "refreshCodeHeureH";
+            this.refreshCodeHeureH.Size = new System.Drawing.Size(23, 24);
+            this.refreshCodeHeureH.TabIndex = 15;
+            this.refreshCodeHeureH.TabStop = false;
+            this.refreshCodeHeureH.Click += new System.EventHandler(this.refreshCodeHeureH_Click);
             // 
             // FormInstall
             // 
@@ -192,6 +224,8 @@
             this.BackgroundImage = global::Setup.Properties.Resources.Background;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(704, 501);
+            this.Controls.Add(this.refreshCodeHeureH);
+            this.Controls.Add(this.refreshCodeGenerals);
             this.Controls.Add(this.textBoxSerialHeureH);
             this.Controls.Add(this.labelSerialHeureH);
             this.Controls.Add(this.textBoxSerialGenerals);
@@ -211,6 +245,10 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Installation de Generals Ultimate Experience";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.Load += new System.EventHandler(this.FormInstall_Load);
+            this.Shown += new System.EventHandler(this.FormInstall_Shown);
+            ((System.ComponentModel.ISupportInitialize)(this.refreshCodeGenerals)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.refreshCodeHeureH)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -230,6 +268,8 @@
         private System.Windows.Forms.Label labelSerialGenerals;
         private System.Windows.Forms.TextBox textBoxSerialHeureH;
         private System.Windows.Forms.Label labelSerialHeureH;
+        private System.Windows.Forms.PictureBox refreshCodeGenerals;
+        private System.Windows.Forms.PictureBox refreshCodeHeureH;
     }
 }
 

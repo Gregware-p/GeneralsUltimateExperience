@@ -46,9 +46,10 @@
             this.labelPoint4.BackColor = System.Drawing.Color.Transparent;
             this.labelPoint4.Font = new System.Drawing.Font("Verdana", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelPoint4.ForeColor = System.Drawing.Color.White;
-            this.labelPoint4.Location = new System.Drawing.Point(17, 269);
+            this.labelPoint4.Location = new System.Drawing.Point(34, 517);
+            this.labelPoint4.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.labelPoint4.Name = "labelPoint4";
-            this.labelPoint4.Size = new System.Drawing.Size(82, 16);
+            this.labelPoint4.Size = new System.Drawing.Size(81, 16);
             this.labelPoint4.TabIndex = 37;
             this.labelPoint4.Text = "► Terminé !";
             this.labelPoint4.Visible = false;
@@ -59,9 +60,10 @@
             this.labelPoint2.BackColor = System.Drawing.Color.Transparent;
             this.labelPoint2.Font = new System.Drawing.Font("Verdana", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelPoint2.ForeColor = System.Drawing.Color.White;
-            this.labelPoint2.Location = new System.Drawing.Point(17, 227);
+            this.labelPoint2.Location = new System.Drawing.Point(34, 437);
+            this.labelPoint2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.labelPoint2.Name = "labelPoint2";
-            this.labelPoint2.Size = new System.Drawing.Size(180, 16);
+            this.labelPoint2.Size = new System.Drawing.Size(179, 16);
             this.labelPoint2.TabIndex = 36;
             this.labelPoint2.Text = "► Suppression des fichiers";
             this.labelPoint2.Visible = false;
@@ -72,9 +74,10 @@
             this.labelPoint1.BackColor = System.Drawing.Color.Transparent;
             this.labelPoint1.Font = new System.Drawing.Font("Verdana", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelPoint1.ForeColor = System.Drawing.Color.White;
-            this.labelPoint1.Location = new System.Drawing.Point(17, 206);
+            this.labelPoint1.Location = new System.Drawing.Point(34, 396);
+            this.labelPoint1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.labelPoint1.Name = "labelPoint1";
-            this.labelPoint1.Size = new System.Drawing.Size(264, 16);
+            this.labelPoint1.Size = new System.Drawing.Size(263, 16);
             this.labelPoint1.TabIndex = 35;
             this.labelPoint1.Text = "► Suppression des données de registre";
             this.labelPoint1.Visible = false;
@@ -85,23 +88,25 @@
             this.labelSubtitle.BackColor = System.Drawing.Color.Transparent;
             this.labelSubtitle.Font = new System.Drawing.Font("Verdana", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelSubtitle.ForeColor = System.Drawing.Color.White;
-            this.labelSubtitle.Location = new System.Drawing.Point(12, 180);
+            this.labelSubtitle.Location = new System.Drawing.Point(24, 346);
+            this.labelSubtitle.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.labelSubtitle.Name = "labelSubtitle";
-            this.labelSubtitle.Size = new System.Drawing.Size(273, 16);
+            this.labelSubtitle.Size = new System.Drawing.Size(272, 16);
             this.labelSubtitle.TabIndex = 34;
             this.labelSubtitle.Text = "Désolé de te voir partir... Grave erreur...";
             // 
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCancel.BackColor = System.Drawing.SystemColors.Highlight;
+            this.buttonCancel.BackColor = System.Drawing.SystemColors.GrayText;
             this.buttonCancel.FlatAppearance.BorderSize = 0;
             this.buttonCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonCancel.Font = new System.Drawing.Font("Verdana", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonCancel.ForeColor = System.Drawing.SystemColors.HighlightText;
-            this.buttonCancel.Location = new System.Drawing.Point(455, 358);
+            this.buttonCancel.Location = new System.Drawing.Point(910, 688);
+            this.buttonCancel.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(117, 41);
+            this.buttonCancel.Size = new System.Drawing.Size(234, 79);
             this.buttonCancel.TabIndex = 32;
             this.buttonCancel.Text = "Annuler";
             this.buttonCancel.UseVisualStyleBackColor = false;
@@ -115,9 +120,10 @@
             this.buttonUninstall.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonUninstall.Font = new System.Drawing.Font("Verdana", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonUninstall.ForeColor = System.Drawing.SystemColors.HighlightText;
-            this.buttonUninstall.Location = new System.Drawing.Point(313, 358);
+            this.buttonUninstall.Location = new System.Drawing.Point(626, 688);
+            this.buttonUninstall.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.buttonUninstall.Name = "buttonUninstall";
-            this.buttonUninstall.Size = new System.Drawing.Size(117, 41);
+            this.buttonUninstall.Size = new System.Drawing.Size(234, 79);
             this.buttonUninstall.TabIndex = 31;
             this.buttonUninstall.Text = "Désinstaller";
             this.buttonUninstall.UseVisualStyleBackColor = false;
@@ -130,7 +136,8 @@
             this.labelCopyright.BackColor = System.Drawing.Color.Transparent;
             this.labelCopyright.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelCopyright.ForeColor = System.Drawing.Color.White;
-            this.labelCopyright.Location = new System.Drawing.Point(-1, 395);
+            this.labelCopyright.Location = new System.Drawing.Point(-2, 760);
+            this.labelCopyright.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.labelCopyright.Name = "labelCopyright";
             this.labelCopyright.Size = new System.Drawing.Size(110, 13);
             this.labelCopyright.TabIndex = 30;
@@ -144,9 +151,10 @@
             this.checkBoxDeleteDocumentFolder.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxDeleteDocumentFolder.Font = new System.Drawing.Font("Verdana", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBoxDeleteDocumentFolder.ForeColor = System.Drawing.Color.White;
-            this.checkBoxDeleteDocumentFolder.Location = new System.Drawing.Point(313, 332);
+            this.checkBoxDeleteDocumentFolder.Location = new System.Drawing.Point(626, 638);
+            this.checkBoxDeleteDocumentFolder.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.checkBoxDeleteDocumentFolder.Name = "checkBoxDeleteDocumentFolder";
-            this.checkBoxDeleteDocumentFolder.Size = new System.Drawing.Size(266, 20);
+            this.checkBoxDeleteDocumentFolder.Size = new System.Drawing.Size(265, 20);
             this.checkBoxDeleteDocumentFolder.TabIndex = 38;
             this.checkBoxDeleteDocumentFolder.Text = "Supprimer le contenu de Documents";
             this.checkBoxDeleteDocumentFolder.UseVisualStyleBackColor = false;
@@ -157,20 +165,21 @@
             this.labelPoint3.BackColor = System.Drawing.Color.Transparent;
             this.labelPoint3.Font = new System.Drawing.Font("Verdana", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelPoint3.ForeColor = System.Drawing.Color.White;
-            this.labelPoint3.Location = new System.Drawing.Point(17, 248);
+            this.labelPoint3.Location = new System.Drawing.Point(34, 477);
+            this.labelPoint3.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.labelPoint3.Name = "labelPoint3";
-            this.labelPoint3.Size = new System.Drawing.Size(294, 16);
+            this.labelPoint3.Size = new System.Drawing.Size(293, 16);
             this.labelPoint3.TabIndex = 39;
             this.labelPoint3.Text = "► Suppression du contenu dans Documents";
             this.labelPoint3.Visible = false;
             // 
             // FormUninstall
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::Setup.Properties.Resources.Background;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(584, 411);
+            this.ClientSize = new System.Drawing.Size(1168, 790);
             this.Controls.Add(this.labelPoint3);
             this.Controls.Add(this.checkBoxDeleteDocumentFolder);
             this.Controls.Add(this.labelPoint4);
@@ -182,6 +191,7 @@
             this.Controls.Add(this.labelCopyright);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Name = "FormUninstall";
             this.Text = "Désinstallation de Generals Ultimate Experience";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormUninstall_FormClosing);

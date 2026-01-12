@@ -16,7 +16,7 @@ namespace Installer
     public partial class FormUpdate : Form
     {
         #region Constantes
-        private const string UPDATE_SERVICE_URL = "http://gregware.internet-box.ch/GeneralsUltimateExperience";
+        private const string UPDATE_SERVICE_URL = "http://gregware.internet-box.ch/GeneralsUltimateExperienceV2";
         private const long SIZE_MARGE = 1048576000; // 1 Go
         #endregion
 
@@ -47,6 +47,7 @@ namespace Installer
 
         #region variables
         private Version _localVersion = new Version();
+        private Version _previousVersion = new Version();
         private List<UpdateItem> _remoteUpdateList = new List<UpdateItem>();
         private Etat _etat = Etat.PasDemarre;
         private readonly TaskScheduler _uiScheduler;
@@ -72,6 +73,8 @@ namespace Installer
             GetRemoteVersion();
             _localVersion.Major = (int)keyUge.GetValue("MajorVersion");
             _localVersion.Minor = (int)keyUge.GetValue("MinorVersion");
+            _previousVersion.Major = _localVersion.Major;
+            _previousVersion.Minor = _localVersion.Minor;
         }
 
         private void FormUpdate_Shown(object sender, EventArgs e)
@@ -142,7 +145,9 @@ namespace Installer
             labelPoint5.Visible = false;
             _currentUpdate = _updateListeUtile.First();
             _updateListeUtile.Remove(_currentUpdate);
-            labelSubtitle.Text = string.Format("Mise à jour version {0}.{1} => {2}.{3}", _localVersion.Major, _localVersion.Minor, _currentUpdate.Version.Major, _currentUpdate.Version.Minor);
+            labelSubtitle.Text = string.Format("Mise à jour version {0}.{1} => {2}.{3}", _previousVersion.Major, _previousVersion.Minor, _currentUpdate.Version.Major, _currentUpdate.Version.Minor);
+            _previousVersion.Major = _currentUpdate.Version.Major;
+            _previousVersion.Minor = _currentUpdate.Version.Minor; 
             labelSubtitle.Visible = true;
             _updateiterator++;
 

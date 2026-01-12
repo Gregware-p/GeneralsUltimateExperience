@@ -54,6 +54,9 @@
                 <!-- OK Button -->
                 <Button Name="Button_OK" MinWidth="88" MaxWidth="160" Margin="35,0,5,0" HorizontalAlignment="Right" Height="26"
                         Click="Button_OK_Click" Foreground="White">
+                    <Button.Background>
+                        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>
+                    </Button.Background>
                     <Label Name="Label_Ok" Padding="0" Margin="10,0" FontFamily="Verdana" FontSize="14" Foreground="White">_OK</Label>
                 </Button>
                 <!-- End OK Button -->

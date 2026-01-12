@@ -44,7 +44,7 @@ namespace GeneralsUltimateExperience
             _keyZeroHour = Registry.LocalMachine.OpenSubKey("Software\\Electronic Arts\\EA GAMES\\Command and Conquer Generals Zero Hour\\ergc");
             if(_keyGenerals == null || _keyZeroHour == null)
             {
-                CustomMessageBox.Show(this, "Impossible de trouver les numéros de série dans la base de regsitre, l'installation est corrompue :-(", "Serious error", MessageBoxButton.OK, MessageBoxImage.Error);
+                CustomMessageBox.Show(this, "Impossible de trouver les numéros de série dans la base de registre, l'installation est corrompue :-(", "Serious error", MessageBoxButton.OK, MessageBoxImage.Error);
                 Close();
                 return;
             }
@@ -79,6 +79,16 @@ namespace GeneralsUltimateExperience
             {
                 textBoxSerialHeureH.Text = "XXXX-XXXX-XXXX-XXXX-XXXX";
             }
+        }
+
+        private void buttonRefreshSerialGenerals_Click(object sender, RoutedEventArgs e)
+        {
+            textBoxSerialGenerals.Text = CodeGenerator.GenerateNumeric();
+        }
+
+        private void buttonRefreshSerialHeureH_Click(object sender, RoutedEventArgs e)
+        {
+            textBoxSerialHeureH.Text = CodeGenerator.GenerateAlphaNumericUpper();
         }
 
         private void buttonOK_Click(object sender, RoutedEventArgs e)

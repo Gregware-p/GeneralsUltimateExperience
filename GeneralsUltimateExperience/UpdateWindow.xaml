@@ -15,6 +15,10 @@
         <Label x:Name="labelDispo" Content="" HorizontalAlignment="Left" Margin="19,41,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Verdana" FontSize="13" />
         <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="241" Margin="19,72,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="622" FontFamily="Verdana" FontSize="11" VerticalScrollBarVisibility="Auto" IsReadOnly="True" />
         <Button x:Name="buttonCancel" Content="Annuler" Margin="0,0,10,10" Width="99" Height="37" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Verdana" FontSize="14" Click="buttonCancel_Click" />
-        <Button x:Name="buttonInstall" Content="Installer" Margin="0,0,135,10" Width="99" Height="37" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Verdana" FontSize="14" Click="buttonInstall_Click" />
+        <Button x:Name="buttonInstall" Content="Installer" Margin="0,0,135,10" Width="99" Height="37" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Verdana" FontSize="14" Click="buttonInstall_Click" >
+            <Button.Background>
+                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>
+            </Button.Background>
+        </Button>
     </Grid>
 </Controls:MetroWindow>

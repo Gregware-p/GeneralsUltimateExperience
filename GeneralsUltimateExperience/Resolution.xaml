@@ -19,7 +19,11 @@
         <ComboBox x:Name="comboBoxGenerals" HorizontalAlignment="Left" Margin="22,45,0,0" VerticalAlignment="Top" Width="188" Grid.ColumnSpan="2" />
         <Label x:Name="labelHeureH" Content="Heure H" HorizontalAlignment="Left" Margin="18,82,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Verdana" FontSize="13"/>
         <ComboBox x:Name="comboBoxHeureH" HorizontalAlignment="Left" Margin="22,108,0,0" VerticalAlignment="Top" Width="188" Grid.ColumnSpan="2" />
-        <Button x:Name="buttonOK" Content="OK" Margin="0,0,126,10" Width="99" Height="37" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Verdana" FontSize="14" Click="buttonOK_Click" Grid.ColumnSpan="2"/>
+        <Button x:Name="buttonOK" Content="OK" Margin="0,0,126,10" Width="99" Height="37" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Verdana" FontSize="14" Click="buttonOK_Click" Grid.ColumnSpan="2">
+            <Button.Background>
+                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>
+            </Button.Background>
+        </Button>
         <Button x:Name="buttonCancel" Content="Annuler" Margin="0,0,10,10" Width="99" Height="37" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Verdana" FontSize="14" Click="buttonCancel_Click" Grid.Column="1" />
     </Grid>
 </Controls:MetroWindow>
