@@ -23,7 +23,7 @@ namespace GeneralsUltimateExperience
     public partial class MainWindow : MetroWindow
     {
         #region Constants, structs enums
-        public const string UPDATE_SERVICE_URL = "http://gregware.internet-box.ch/GeneralsUltimateExperience";
+        public const string UPDATE_SERVICE_URL = "http://gregware.internet-box.ch/GeneralsUltimateExperienceV2";
         public const double CHANGE_TAB_ANIMATION_DURATION_IN_SECONDS = 0.1;
         public const double CHANGE_MOD_ANIMATION_DURATION_IN_SECONDS = 0.25;
         public const double BUTTON_FADE_DURATION_IN_SECONDS = 0.1;
@@ -221,38 +221,6 @@ namespace GeneralsUltimateExperience
             UpdateGue();
         }
 
-        private void settingsGameDat_Click(object sender, RoutedEventArgs e)
-        {
-            if (IsGameRunning())
-            {
-                CustomMessageBox.Show(this, string.Format("Nettoyage de game.dat impossible : le jeu est en cours d'exécution.{0}{0}Quitte d'abord le jeu (si nécessaire via Gestionnaire des tâches => fin de tâche sur game.dat)",
-                        Environment.NewLine), "Nettoyage game.dat", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            try
-            {
-                File.Copy(
-                    string.Format("{0}\\Repair\\Generals\\game.dat", _pathToExe),
-                    string.Format("{0}\\Games\\Generals\\game.dat", _pathToExe),
-                    true);
-                File.Copy(
-                    string.Format("{0}\\Repair\\HeureH\\game.dat", _pathToExe),
-                    string.Format("{0}\\Games\\HeureH\\game.dat", _pathToExe),
-                    true);
-
-                Properties.Settings.Default["Current4g"] = false;
-                Properties.Settings.Default.Save();
-
-                CustomMessageBox.Show(this, "Game.dat nettoyés avec succès :-)", "Nettoyage game.dat", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            catch(Exception)
-            {
-                CustomMessageBox.Show(this, string.Format("Le nettoyage de game.dat a échoué :-({0}{0}Vérifier que le jeu n'est pas en cours d'exécution et essayer ultérieurement.",
-                        Environment.NewLine), "Nettoyage game.dat", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
         private void settingsCleanMaps_Click(object sender, RoutedEventArgs e)
         {
             if (CustomMessageBox.Show(this, string.Format("Tu es sur le point de supprimer toutes les maps ajoutées manuellement ou téléchargées depuis le jeu. Continuer ?",
@@ -321,7 +289,7 @@ namespace GeneralsUltimateExperience
 
         private void settingsAbout_Click(object sender, RoutedEventArgs e)
         {
-            CustomMessageBox.Show(this, string.Format("Version {1}.{2}{0}{0}Copyright © 2016-2022 Gregware",
+            CustomMessageBox.Show(this, string.Format("Version {1}.{2}{0}{0}Powered by Gregware",
                         Environment.NewLine, _localVersion.Major, _localVersion.Minor), "À propos", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
@@ -701,14 +669,14 @@ namespace GeneralsUltimateExperience
             sw.WriteLine("CampaignDifficulty = 2");
             sw.WriteLine("DrawScrollAnchor = ");
             sw.WriteLine("DynamicLOD = yes");
-            sw.WriteLine("ExtraAnimations = no");
+            sw.WriteLine("ExtraAnimations = yes");
             sw.WriteLine("GameSpyIPAddress = 0.0.0.0");
             sw.WriteLine("Gamma = 50");
             sw.WriteLine("HeatEffects = no");
             sw.WriteLine("IPAddress = 0.0.0.0");
-            sw.WriteLine("IdealStaticGameLOD = Low");
+            sw.WriteLine("IdealStaticGameLOD = Medium");
             sw.WriteLine("LanguageFilter = false");
-            sw.WriteLine("MaxParticleCount = 800");
+            sw.WriteLine("MaxParticleCount = 700");
             sw.WriteLine("MoveScrollAnchor = ");
             sw.WriteLine("MusicVolume = 35");
             sw.WriteLine(string.Format("Resolution = {0} {1}", width, height));
@@ -719,8 +687,8 @@ namespace GeneralsUltimateExperience
             sw.WriteLine("SendDelay = no");
             sw.WriteLine("ShowSoftWaterEdge = yes");
             sw.WriteLine("ShowTrees = no");
-            sw.WriteLine("StaticGameLOD = Low");
-            sw.WriteLine("TextureReduction = 1");
+            sw.WriteLine("StaticGameLOD = Medium");
+            sw.WriteLine("TextureReduction = 0");
             sw.WriteLine("UseAlternateMouse = no");
             sw.WriteLine("UseCloudMap = yes");
             sw.WriteLine("UseDoubleClickAttackMove = yes");

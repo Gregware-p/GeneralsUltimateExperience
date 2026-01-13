@@ -20,17 +20,15 @@ namespace Installer
 {
     public partial class FormInstall : Form
     {
-        private const long TOTAL_SIZE = 47285244121;
-        private const long TOTAL_SIZE_COMPRESSE = 20555309319;
+        private const long TOTAL_SIZE = 19477257233;
+        private const long TOTAL_SIZE_COMPRESSE = 9506451183;
         private const long SIZE_MARGE = 1048576000; // 1 Go
-        private const string DOWNLOADFILE_URL = "http://gregware.internet-box.ch/GeneralsUltimateExperience/";
+        private const string DOWNLOADFILE_URL = "http://gregware.internet-box.ch/GeneralsUltimateExperienceV2/";
         private readonly List<string> FILES = new List<string>
         {
             "GueBackgroundInstall.part01.exe",
             "GueBackgroundInstall.part02.rar",
-            "GueBackgroundInstall.part03.rar",
-            "GueBackgroundInstall.part04.rar",
-            "GueBackgroundInstall.part05.rar"
+            "GueBackgroundInstall.part03.rar"
         };
 
         public const string UNINSTALL_REG_KEY_PATH = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
@@ -596,14 +594,14 @@ namespace Installer
             sw.WriteLine("CampaignDifficulty = 2");
             sw.WriteLine("DrawScrollAnchor = ");
             sw.WriteLine("DynamicLOD = yes");
-            sw.WriteLine("ExtraAnimations = no");
+            sw.WriteLine("ExtraAnimations = yes");
             sw.WriteLine("GameSpyIPAddress = 0.0.0.0");
             sw.WriteLine("Gamma = 50");
             sw.WriteLine("HeatEffects = no");
             sw.WriteLine("IPAddress = 0.0.0.0");
-            sw.WriteLine("IdealStaticGameLOD = Low");
+            sw.WriteLine("IdealStaticGameLOD = Medium");
             sw.WriteLine("LanguageFilter = false");
-            sw.WriteLine("MaxParticleCount = 800");
+            sw.WriteLine("MaxParticleCount = 700");
             sw.WriteLine("MoveScrollAnchor = ");
             sw.WriteLine("MusicVolume = 35");
             sw.WriteLine(string.Format("Resolution = {0} {1}", width, height));
@@ -614,8 +612,8 @@ namespace Installer
             sw.WriteLine("SendDelay = no");
             sw.WriteLine("ShowSoftWaterEdge = yes");
             sw.WriteLine("ShowTrees = no");
-            sw.WriteLine("StaticGameLOD = Low");
-            sw.WriteLine("TextureReduction = 1");
+            sw.WriteLine("StaticGameLOD = Medium");
+            sw.WriteLine("TextureReduction = 0");
             sw.WriteLine("UseAlternateMouse = no");
             sw.WriteLine("UseCloudMap = yes");
             sw.WriteLine("UseDoubleClickAttackMove = yes");

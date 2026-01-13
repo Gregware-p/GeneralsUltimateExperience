@@ -16,7 +16,6 @@
             <Button.ContextMenu>
                 <ContextMenu >
                     <MenuItem Header="Mettre à jour" Click="settingsUpdate_Click" />
-                    <MenuItem Header="Nettoyer game.dat" Click="settingsGameDat_Click" />
                     <MenuItem Header="Nettoyer les maps" Click="settingsCleanMaps_Click" />
                     <MenuItem Header="Nettoyer Options.ini" Click="settingsCleanIni_Click" />
                     <MenuItem Header="Numéros de série" Click="settingsChangeSerial_Click" />

@@ -13,27 +13,36 @@ namespace Setup
         /// </summary>
         public static string GenerateNumeric()
         {
-            return Generate("0123456789");
-        }
-
-        /// <summary>
-        /// Format : XXXX-XXXXXXX-XXXXXXX-XXXX
-        /// Chiffres + lettres MAJUSCULES
-        /// </summary>
-        public static string GenerateAlphaNumericUpper()
-        {
-            return Generate("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-        }
-
-        private static string Generate(string allowedChars)
-        {
-            var sb = new StringBuilder(26);
+            var allowedChars = "0123456789";
+            var sb = new StringBuilder();
 
             AppendRandom(sb, allowedChars, 4);
             sb.Append('-');
             AppendRandom(sb, allowedChars, 7);
             sb.Append('-');
             AppendRandom(sb, allowedChars, 7);
+            sb.Append('-');
+            AppendRandom(sb, allowedChars, 4);
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Format : XXXX-XXXX-XXXX-XXXX-XXXX
+        /// Chiffres + lettres MAJUSCULES
+        /// </summary>
+        public static string GenerateAlphaNumericUpper()
+        {
+            var allowedChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            var sb = new StringBuilder();
+
+            AppendRandom(sb, allowedChars, 4);
+            sb.Append('-');
+            AppendRandom(sb, allowedChars, 4);
+            sb.Append('-');
+            AppendRandom(sb, allowedChars, 4);
+            sb.Append('-');
+            AppendRandom(sb, allowedChars, 4);
             sb.Append('-');
             AppendRandom(sb, allowedChars, 4);
 
